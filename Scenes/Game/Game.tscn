@@ -41,6 +41,7 @@ func spawn_player(_id):
 	var my_random_number = rng.randf_range(100, get_viewport().size.y-100)
 	player.setup(_id,Vector2(100,my_random_number),Config.PLAYER_HEALTH)
 	player.set_network_master(_id)
+	player.name = str(_id)
 	player.done_setup()
 	self.add_child(player)
 	return player

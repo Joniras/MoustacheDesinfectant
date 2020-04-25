@@ -49,9 +49,9 @@ func setup(_nr, _position, _health):
 	
 func done_setup():
 	if player_nr == \"1\":
-		print(\"Using Ship2\")
-	else:
 		print(\"Using Ship1\")
+	else:
+		print(\"Using Ship2\")
 	if is_my_ship():
 		print(\"I am controlling: \",player_nr)
 	else:
@@ -59,17 +59,18 @@ func done_setup():
 	print(\"Network master: \", get_network_master())
 	
 func _process(delta):
-	if is_my_ship():
+	if is_network_master():
 		if(!is_currently_dock_slave()):
 			process_movement(delta)
 			
-		if(is_currently_dock_slave()):
+		if(!is_currently_dock_slave() or is_currently_dock_slave() and !Config.is_server):
 			if Input.is_action_pressed(\"shoot_1\"):
 				shoot()
 		if !docked:
 			if Input.is_action_just_pressed(\"dock_1\"):
 				set_advertising(!advertising)
-	
+				
+				
 func is_currently_dock_slave():
 	return docked and !Config.is_server 
 	
@@ -78,6 +79,7 @@ func is_my_ship():
 	
 func shoot():
 	if bullet_allowed:
+		rpc(\"spawn_bullet\")
 		spawn_bullet()
 		bullet_allowed = false
 		var _timer = Timer.new()
@@ -88,7 +90,7 @@ func shoot():
 		_timer.set_one_shot(true) 
 		_timer.start()
 	
-func spawn_bullet():
+puppet func spawn_bullet():
 	var bullet =  BULLET.instance()
 	bullet.setup(self,level * DAMAGE_PER_LEVEL,Vector2(position.x+20,position.y), BULLET_SPEED)
 	$\"../\".add_child(bullet)
@@ -159,15 +161,14 @@ func addPosition(_movement):
 	position += _movement 
 	$CanvasLayer.offset = position
 	# rpc_id(Config.other_player_id, \"move_player\", {position: position})
-	rpc(\"move_remote\",position)
-	print(\"Casting position\")
+	rpc(\"set_position\",position)
 	
-	# puppet + other_id worked somehow remote + other_id worked
-master func move_remote(_position):
-	print(\"Receiving position\")
-	position = _position
-	$CanvasLayer.offset = _position
+puppet func set_position(p_position):
+	position = p_position
+	$CanvasLayer.offset = p_position
 	
+	
+
 	
 func take_control():
 	player2.position.y = position.y
