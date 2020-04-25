@@ -32,7 +32,7 @@ func _ready():
 
 func _connect():
 	Config.is_server = get_node("cb_host").pressed
-	print("is_server = %s" % is_server)
+	print("is_server = %s" % Config.is_server)
 	my_info.name = get_node("txt_name").text
 	
 	if (Config.is_server):
