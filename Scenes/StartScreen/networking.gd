@@ -9,7 +9,7 @@ extends Node
 var MAX_PLAYERS = 2
 var my_ip = _get_public_ip()
 var player_info = {}
-var my_info = {name = "player"}
+var my_info = {name = "player", ship = 1}
 
 
 # Called when the node enters the scene tree for the first time.
@@ -32,7 +32,8 @@ func _ready():
 
 func _connect():
 	Config.is_server = get_node("cb_host").pressed
-	print("is_server = %s" % Config.is_server)
+	print("is_server = %s" % is_server)
+	my_info.name = get_node("txt_name").text
 	
 	if (Config.is_server):
 		var server_port = get_node("txt_server_port").text
@@ -124,6 +125,25 @@ func _show_controls(is_host):
 	get_node("txt_port").visible = !is_host
 	get_node("lbl_ip").visible = !is_host
 	get_node("lbl_port").visible = !is_host
+	get_node("lbl_select_space_ship").visible = is_host
+	get_node("space_ship_pack_1_1").visible = is_host
+	get_node("space_ship_pack_1_2").visible = is_host
+	get_node("space_ship_pack_2_1").visible = is_host
+	get_node("space_ship_pack_2_2").visible = is_host
+	get_node("cb_ship_pack_1").visible = is_host
+	get_node("cb_ship_pack_2").visible = is_host
 
 func _show_select_spaceship_package():
 	get_tree().change_scene("res://Scenes/Game/Game.tscn")
+
+
+func _on_cb_ship_pack_1_pressed():
+	my_info.ship = 1
+	get_node("cb_ship_pack_1").pressed = true
+	get_node("cb_ship_pack_2").pressed = false
+
+
+func _on_cb_ship_pack_2_pressed():
+	my_info.ship = 2
+	get_node("cb_ship_pack_1").pressed = false
+	get_node("cb_ship_pack_2").pressed = true

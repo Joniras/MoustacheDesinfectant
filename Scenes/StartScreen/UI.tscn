@@ -1,20 +1,29 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Scenes/StartScreen/networking.gd" type="Script" id=1]
 [ext_resource path="res://fonts/thunderstrike/thunderstrikelaser.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://fonts/thunderstrike/thunderstrikehalf.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://fonts/thunderstrike/thunderstrikecond.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://assets/bg/lobby_grid.png" type="Texture" id=5]
+[ext_resource path="res://fonts/thunderstrike/thunderstrike.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://assets/ships/ship_1.png" type="Texture" id=7]
+[ext_resource path="res://assets/ships/ship_2.png" type="Texture" id=8]
 
 [sub_resource type="Theme" id=1]
 
 [sub_resource type="DynamicFont" id=2]
 size = 22
+use_filter = true
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 22
+use_filter = true
 font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=13]
+use_filter = true
+font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=4]
 size = 22
@@ -29,14 +38,17 @@ font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=7]
 size = 62
+use_filter = true
 font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=8]
 size = 26
+use_filter = true
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=9]
 size = 26
+use_filter = true
 font_data = ExtResource( 2 )
 
 [sub_resource type="Environment" id=10]
@@ -45,6 +57,21 @@ glow_enabled = true
 glow_intensity = 0.47
 glow_blend_mode = 0
 glow_hdr_threshold = 0.75
+
+[sub_resource type="DynamicFont" id=11]
+size = 24
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=12]
+size = 24
+use_filter = true
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=14]
+size = 24
+use_filter = true
+font_data = ExtResource( 3 )
 
 [node name="LobbyScene" type="Node2D"]
 script = ExtResource( 1 )
@@ -105,18 +132,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="txt_port" type="TextEdit" parent="."]
-visible = false
-margin_left = 737.474
-margin_top = 245.434
-margin_right = 881.474
-margin_bottom = 269.434
+[node name="txt_server_port" type="TextEdit" parent="."]
+margin_left = 737.99
+margin_top = 178.277
+margin_right = 881.99
+margin_bottom = 202.277
 rect_pivot_offset = Vector2( 72, 26.8557 )
 text = "6969"
+custom_fonts/font = SubResource( 13 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
 [node name="txt_ip" type="TextEdit" parent="."]
 visible = false
 margin_left = 408.008
@@ -136,6 +163,13 @@ margin_right = 881.99
 margin_bottom = 202.277
 rect_pivot_offset = Vector2( 72, 26.8557 )
 text = "6969"
+margin_left = 408.24
+margin_top = 243.927
+margin_right = 552.24
+margin_bottom = 267.927
+rect_pivot_offset = Vector2( 72, 26.8557 )
+custom_fonts/font = SubResource( 13 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -171,10 +205,10 @@ __meta__ = {
 }
 
 [node name="btn_connect" type="Button" parent="."]
-margin_left = 782.551
-margin_top = 304.044
-margin_right = 879.551
-margin_bottom = 329.044
+margin_left = 817.515
+margin_top = 520.589
+margin_right = 914.515
+margin_bottom = 545.589
 custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0.356863, 0.823529, 1 )
@@ -238,6 +272,108 @@ __meta__ = {
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 10 )
+
+[node name="lbl_name" type="Label" parent="."]
+margin_left = 306.45
+margin_top = 315.05
+margin_right = 469.45
+margin_bottom = 351.05
+custom_fonts/font = SubResource( 11 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
+text = "Your Name:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="txt_name" type="TextEdit" parent="."]
+margin_left = 488.0
+margin_top = 313.0
+margin_right = 867.0
+margin_bottom = 350.0
+rect_pivot_offset = Vector2( 72, 26.8557 )
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+text = "Magnificent Moustache
+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="txt_port" type="TextEdit" parent="."]
+visible = false
+margin_left = 737.99
+margin_top = 243.277
+margin_right = 881.99
+margin_bottom = 267.277
+rect_pivot_offset = Vector2( 72, 26.8557 )
+custom_fonts/font = SubResource( 13 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cb_ship_pack_1" type="CheckBox" parent="."]
+margin_left = 89.0
+margin_top = 453.0
+margin_right = 281.0
+margin_bottom = 584.0
+mouse_default_cursor_shape = 2
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_pressed = Color( 0, 0.882353, 1, 1 )
+pressed = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cb_ship_pack_2" type="CheckBox" parent="."]
+margin_left = 354.0
+margin_top = 453.0
+margin_right = 546.0
+margin_bottom = 584.0
+mouse_default_cursor_shape = 2
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_pressed = Color( 0, 0.882353, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="space_ship_pack_1_1" type="Sprite" parent="."]
+position = Vector2( 165.789, 518.947 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 7 )
+
+[node name="space_ship_pack_2_1" type="Sprite" parent="."]
+position = Vector2( 420.789, 518.947 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 7 )
+
+[node name="space_ship_pack_1_2" type="Sprite" parent="."]
+position = Vector2( 229.789, 518.947 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 8 )
+
+[node name="space_ship_pack_2_2" type="Sprite" parent="."]
+position = Vector2( 485.789, 518.947 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 8 )
+
+[node name="lbl_select_space_ship" type="Label" parent="."]
+margin_left = 129.474
+margin_top = 403.158
+margin_right = 169.474
+margin_bottom = 417.158
+custom_fonts/font = SubResource( 14 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+text = "Select Your Space Ship!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="cb_host" to="." method="_on_cb_host_pressed"]
 [connection signal="pressed" from="cb_client" to="." method="_on_cb_client_pressed"]
 [connection signal="pressed" from="btn_connect" to="." method="_on_btn_connect_pressed"]
+[connection signal="pressed" from="cb_ship_pack_1" to="." method="_on_cb_ship_pack_1_pressed"]
+[connection signal="pressed" from="cb_ship_pack_2" to="." method="_on_cb_ship_pack_2_pressed"]
