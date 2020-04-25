@@ -1,0 +1,133 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/bg/background.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+
+const ENEMY_SPAWN_PER_SECOND = 1
+const ENEMY_HEALTH = 150
+const ENEMY_XP = 10
+
+onready var ENEMY = preload(\"res://Characters/Enemy/Enemy.tscn\")
+
+onready var PLAYER = preload(\"res://Characters/Player.tscn\")
+
+var rng = RandomNumberGenerator.new()
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	var _timer = Timer.new()
+
+	self.add_child(_timer)
+	_timer.connect(\"timeout\", self, \"_on_Timer_timeout\")
+	_timer.set_wait_time(1/float(ENEMY_SPAWN_PER_SECOND))
+	_timer.set_one_shot(false) 
+	# _timer.start()
+	
+	var player2 = spawn_player(2, null)
+	spawn_player(1, player2)
+	
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta):
+	pass
+
+func _on_Timer_timeout():
+	spawn_enemy()
+	
+func spawn_player(player_nr, player1):
+	var player =  PLAYER.instance()
+	rng.randomize()
+	var my_random_number = rng.randf_range(100, get_viewport().size.y-100)
+	player.setup(player_nr,Vector2(100,my_random_number),Config.PLAYER_HEALTH)
+	if player1:
+		player.set_player(player1)
+	self.add_child(player)
+	return player
+			
+func spawn_enemy():
+	var enemy =  ENEMY.instance()
+	rng.randomize()
+	var my_random_number = rng.randf_range(50, get_viewport().size.y-50)
+	enemy.setup(ENEMY_HEALTH,ENEMY_XP,Vector2(ProjectSettings.get_setting(\"display/window/size/width\")+50,my_random_number))
+	self.add_child(enemy)
+"
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 60, 1 )
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends ParallaxLayer
+
+
+var offset = 0
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	offset -= Config.SPEED*delta
+	set_motion_offset(Vector2(offset,0))
+"
+
+[sub_resource type="Environment" id=6]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 0.2
+glow_blend_mode = 0
+glow_hdr_threshold = 0.05
+glow_hdr_luminance_cap = 10.0
+glow_bicubic_upscale = true
+
+[node name="Game" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Border" type="StaticBody2D" parent="."]
+visible = false
+collision_layer = 4
+collision_mask = 4
+
+[node name="bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2( 500, 600 )
+scale = Vector2( 10, 1 )
+shape = SubResource( 4 )
+
+[node name="top" type="CollisionShape2D" parent="Border"]
+position = Vector2( 492.78, 0 )
+scale = Vector2( 10, 1 )
+shape = SubResource( 4 )
+
+[node name="left" type="CollisionShape2D" parent="Border"]
+position = Vector2( 0, 250 )
+rotation = 1.5708
+scale = Vector2( 10, 1 )
+shape = SubResource( 4 )
+
+[node name="right" type="CollisionShape2D" parent="Border"]
+position = Vector2( 1024, 250 )
+rotation = 1.5708
+scale = Vector2( 10, 1 )
+shape = SubResource( 4 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2( 1024, 0 )
+script = SubResource( 5 )
+
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
+margin_right = 1024.0
+margin_bottom = 600.0
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 6 )

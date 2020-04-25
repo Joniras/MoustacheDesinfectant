@@ -1,0 +1,240 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://Scenes/StartScreen/networking.gd" type="Script" id=1]
+[ext_resource path="res://fonts/thunderstrike/thunderstrikelaser.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://fonts/thunderstrike/thunderstrikehalf.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://fonts/thunderstrike/thunderstrikecond.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://assets/bg/lobby_grid.png" type="Texture" id=5]
+
+[sub_resource type="Theme" id=1]
+
+[sub_resource type="DynamicFont" id=2]
+size = 22
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 22
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 22
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 22
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=6]
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 62
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 26
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 26
+font_data = ExtResource( 2 )
+
+[sub_resource type="Environment" id=10]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 0.47
+glow_blend_mode = 0
+glow_hdr_threshold = 0.75
+
+[node name="LobbyScene" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 512.4, 299.876 )
+scale = Vector2( 1.70975, 1.00461 )
+texture = ExtResource( 5 )
+
+[node name="cb_host" type="CheckBox" parent="."]
+margin_left = 293.0
+margin_top = 178.0
+margin_right = 317.0
+margin_bottom = 202.0
+mouse_default_cursor_shape = 2
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_pressed = Color( 0, 0.882353, 1, 1 )
+pressed = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cb_client" type="CheckBox" parent="."]
+margin_left = 293.0
+margin_top = 247.0
+margin_right = 317.0
+margin_bottom = 271.0
+mouse_default_cursor_shape = 2
+theme = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_ip_and_port" type="Label" parent="."]
+margin_left = 360.0
+margin_top = 177.0
+margin_right = 592.0
+margin_bottom = 203.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_ip_and_port2" type="Label" parent="."]
+margin_left = 651.466
+margin_top = 177.0
+margin_right = 711.466
+margin_bottom = 203.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+text = "Port:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="txt_port" type="TextEdit" parent="."]
+visible = false
+margin_left = 737.474
+margin_top = 245.434
+margin_right = 881.474
+margin_bottom = 269.434
+rect_pivot_offset = Vector2( 72, 26.8557 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="txt_ip" type="TextEdit" parent="."]
+visible = false
+margin_left = 408.008
+margin_top = 244.434
+margin_right = 552.008
+margin_bottom = 268.434
+rect_pivot_offset = Vector2( 72, 26.8557 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="txt_server_port" type="TextEdit" parent="."]
+margin_left = 737.99
+margin_top = 178.277
+margin_right = 881.99
+margin_bottom = 202.277
+rect_pivot_offset = Vector2( 72, 26.8557 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_ip" type="Label" parent="."]
+visible = false
+margin_left = 357.708
+margin_top = 243.384
+margin_right = 397.708
+margin_bottom = 269.384
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
+text = "IP:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_port" type="Label" parent="."]
+visible = false
+margin_left = 650.474
+margin_top = 242.434
+margin_right = 710.474
+margin_bottom = 268.434
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
+text = "Port:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btn_connect" type="Button" parent="."]
+margin_left = 782.551
+margin_top = 304.044
+margin_right = 879.551
+margin_bottom = 329.044
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_pressed = Color( 1, 0.356863, 0.823529, 1 )
+text = "CONNECT!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_title2" type="Label" parent="."]
+margin_left = 45.3572
+margin_top = 56.2135
+margin_right = 981.357
+margin_bottom = 137.214
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+text = "Moustache Desinfectant"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_title" type="Label" parent="."]
+margin_left = 42.3572
+margin_top = 54.2135
+margin_right = 978.357
+margin_bottom = 135.214
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+text = "Moustache Desinfectant"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_host" type="Label" parent="."]
+margin_left = 137.55
+margin_top = 174.05
+margin_right = 234.55
+margin_bottom = 207.05
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
+text = "Host"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_client" type="Label" parent="."]
+margin_left = 138.15
+margin_top = 241.85
+margin_right = 261.15
+margin_bottom = 272.85
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+text = "Client"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 10 )
+[connection signal="pressed" from="cb_host" to="." method="_on_cb_host_pressed"]
+[connection signal="pressed" from="cb_client" to="." method="_on_cb_client_pressed"]
+[connection signal="pressed" from="btn_connect" to="." method="_on_btn_connect_pressed"]

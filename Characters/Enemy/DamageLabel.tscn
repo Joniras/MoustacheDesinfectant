@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Label
+
+var startingPosition = null
+const FLOAT_UP = 50
+const UPSPEED = 80
+
+func setup(damage):
+	text = str(damage)
+
+func _ready():
+	startingPosition = rect_position.y
+	
+	
+func _process(delta):
+	rect_position.y -= delta * UPSPEED
+	if(rect_position.y <= startingPosition - FLOAT_UP):
+		kill_self()
+
+func kill_self():
+	get_parent().remove_child(self)
+"
+
+[node name="Label" type="Label"]
+margin_left = 30.0
+margin_top = -64.0
+margin_right = 55.0
+margin_bottom = -48.0
+rect_scale = Vector2( 3, 3 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "45"
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

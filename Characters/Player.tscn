@@ -1,0 +1,261 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://assets/ships/ship_1.png" type="Texture" id=1]
+[ext_resource path="res://assets/ships/ship_2.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Area2D
+
+
+
+const SPEED = 400 # speed of the ship
+const BULLETS_PER_SECOND = 5 # bullets fired per second
+const DAMAGE_PER_LEVEL = 50 # damage increase after levelup
+const EXPERIENCE_PER_LEVEL = 100 # xp needed for level up
+const LOSS_AFTER_ENEMY_HIT = 34 # damage that is taken after enemy is going out on the left
+const BULLET_SPEED = 500 # bullet speed of the player
+var max_health = null
+
+var level = 1
+var experience = 0
+var health = 100
+var player_nr = null
+var advertising = false
+var player2 = null
+var docked = false
+
+
+onready var BULLET = preload(\"res://Bullet.tscn\")
+var bullet_allowed = true
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	connect(\"body_entered\", self, \"_on_enemy_body_enter\")
+
+func setup(_nr, _position, _health):
+	max_health = _health
+	health = _health
+	position = _position
+	if(_nr == 1):
+		self.remove_child(get_node(\"Ship_2\"))
+		self.remove_child(get_node(\"Ship_2_Shape\"))
+		self.remove_child(get_node(\"Ship_2_Dock\"))
+	else:
+		self.remove_child(get_node(\"Ship_1\"))
+		self.remove_child(get_node(\"Ship_1_Shape\"))
+		self.remove_child(get_node(\"Ship_1_Dock\"))
+	player_nr = str(_nr)
+	$CanvasLayer.offset = position
+	
+	
+func _process(delta):
+	if(!(docked and player_nr == \"2\")):
+		process_movement(delta)
+		
+	if(!(docked and player_nr == \"1\")):
+		if Input.is_action_pressed(\"shoot_\"+player_nr):
+			shoot()
+	if !docked:
+		if Input.is_action_just_pressed(\"dock_\"+player_nr):
+			set_advertising(!advertising)
+	
+	
+func shoot():
+	if bullet_allowed:
+		spawn_bullet()
+		bullet_allowed = false
+		var _timer = Timer.new()
+		self.add_child(_timer)
+	
+		_timer.connect(\"timeout\", self, \"_on_Timer_timeout\")
+		_timer.set_wait_time(1/float(BULLETS_PER_SECOND))
+		_timer.set_one_shot(true) 
+		_timer.start()
+	
+	
+func spawn_bullet():
+	var bullet =  BULLET.instance()
+	bullet.setup(self,level * DAMAGE_PER_LEVEL,Vector2(position.x+20,position.y), BULLET_SPEED)
+	$\"../\".add_child(bullet)
+	
+func process_movement(delta):
+	var movement = Vector2(0,0)
+	if Input.is_action_pressed(\"left_\"+player_nr) :
+		movement.x = -1 * SPEED
+	if Input.is_action_pressed(\"right_\"+player_nr) :
+		movement.x = 1 * SPEED
+	if Input.is_action_pressed(\"up_\"+player_nr) :
+		movement.y = -1 * SPEED
+	if Input.is_action_pressed(\"down_\"+player_nr):
+		movement.y = 1 * SPEED
+	if((movement.x != 0 or movement.y != 0) and in_game(position + movement * delta)):
+		addPosition(movement*delta)
+		if docked and player_nr == \"1\":
+			player2.addPosition(movement*delta)
+		
+
+func gainXP(amount):
+	experience += amount
+	if(experience>EXPERIENCE_PER_LEVEL):
+		level+=1
+		experience -= EXPERIENCE_PER_LEVEL
+
+func _on_Timer_timeout():
+	bullet_allowed = true
+	
+func in_game(position):
+	return position.x < ProjectSettings.get_setting(\"display/window/size/width\") and position.y < ProjectSettings.get_setting(\"display/window/size/height\") and position.x > 0 and position.y > 0
+	
+func update_progress_bar(percent):
+	$CanvasLayer/HealthBar.value = percent
+
+func _on_enemy_body_enter(body):
+	print(\"Player collided with\",body.get_name())
+	if \"Enemy\" in body.get_name():
+		inflictDamage(LOSS_AFTER_ENEMY_HIT)
+		body.kill_after_player_hit()
+		
+		
+func inflictDamage(damage):
+	health -= damage
+	if(health < 0):
+		kill_self()
+	else:
+		update_progress_bar((float(health)/float(max_health))*100)
+
+func kill_self():
+	get_parent().remove_child(self)
+
+func enemy_left_out():
+	inflictDamage(LOSS_AFTER_ENEMY_HIT)
+
+func set_advertising(is_advertising):
+	advertising = is_advertising
+	if advertising:
+		$AnimationPlayer.get_animation(\"dock\").set_loop(true)
+		$AnimationPlayer.play(\"dock\")
+	else:
+		$AnimationPlayer.get_animation(\"dock\").set_loop(false)
+		
+func set_player(_player):
+	player2 = _player
+	
+func addPosition(_movement):
+	position += _movement 
+	$CanvasLayer.offset = position
+	
+func take_control():
+	player2.position.y = position.y
+	player2.set_advertising(false)
+	set_advertising(false)
+	player2.docked = true
+	docked = true
+	
+	
+"
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.00392157, 0.552941, 0.141176, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.239216, 0.239216, 0.239216, 1 )
+
+[sub_resource type="Animation" id=6]
+resource_name = "damage"
+
+[sub_resource type="Animation" id=5]
+resource_name = "dock"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 2, 1, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Area2D
+
+
+func _ready():
+	connect(\"body_entered\", self, \"_on_enemy_body_enter\")
+	
+func _on_enemy_body_enter(body):
+	print(\"Dock collided with \",body.get_name())
+	if(get_parent().advertising):
+		print(\"i am advertising\")
+		if(body.get_parent().advertising):
+			print(\"he is advertising\")
+			get_parent().take_control()
+"
+
+[sub_resource type="RectangleShape2D" id=8]
+
+[sub_resource type="RectangleShape2D" id=9]
+
+[node name="Player" type="Area2D" groups=[
+"player",
+]]
+collision_layer = 5
+collision_mask = 5
+script = SubResource( 1 )
+
+[node name="Ship_1" type="Sprite" parent="."]
+scale = Vector2( 0.226887, 0.226887 )
+texture = ExtResource( 1 )
+
+[node name="Ship_1_Shape" type="CollisionPolygon2D" parent="."]
+scale = Vector2( 0.226887, 0.226887 )
+polygon = PoolVector2Array( -27, -317.7, 107, -253.7, 107, -247.2, 137, -143.6, 137, -119.2, 46.1, -21.7, 62.9, 1, 60.5, 5.60001, 59.4, 14.5, 54, 14.5, 45, 18, 45, 19.4, 137, 117.4, 137, 146.9, 100.7, 260.5, 96, 260.5, -28.3, 318.5, -78.7, 318.5, -92, 316.9, -92, 313.8, -120, 289.8, -120, 285.1, -126.7, 231.5, -121.6, 231.5, -94.7, 191.5, -91, 191.5, -72.1, 182.5, -53.6, 182.5, -30, 186.2, -30, 188.5, -8, 200.5, -8, 204.1, 1.39999, 219.7, 14.8, 193.7, -8.89999, 114, -39.5, 72.5, -41.5, 72.5, -137, 7.5, -137, -6.89999, -115, -16.8, -39, -73, -39, -75.3, -10, -110.4, -10, -116.3, 14, -192.4, 14, -194.3, 1.10001, -220.9, -15.2, -193.5, -20.3, -193.5, -61.3, -181.5, -64.8, -181.5, -98, -192.9, -98, -195.6, -122, -223.7, -122, -228.5, -127.9, -262.5, -124.8, -262.5, -114.8, -297.5, -111.9, -297.5, -91.9, -315.5, -87.6, -315.5, -73.8, -318.5, -27, -318.5 )
+
+[node name="Ship_2" type="Sprite" parent="."]
+scale = Vector2( 0.226887, 0.226887 )
+texture = ExtResource( 2 )
+
+[node name="Ship_2_Shape" type="CollisionPolygon2D" parent="."]
+scale = Vector2( 0.226887, 0.226887 )
+polygon = PoolVector2Array( -81, -406.2, -81, -404.5, -11, -367.5, -11, -365.3, 22, -328.4, 22, -325.9, 69, -252, 69, -248.8, 197.9, -26.5, 198.9, -26.5, 213.9, -13.5, 215.2, -13.5, 237, -11.5, 237, 10.5, 235.4, 10.5, 215.3, 12.3, 199, 24.9, 199, 25.8, 52.9, 277.5, 51.6, 277.5, -10.4, 366.5, -13.7, 366.5, -83.7, 406.5, -88, 406.5, -124.8, 418.5, -168.2, 418.5, -237, 379.7, -237, 369.5, -235.2, 369.5, -147, 354.3, -68.9, 322.1, -50, 306.2, -50, 300.8, 12.2, 92.4, -23.8, 46.6, -102, 86.6, -102, 89.2, -120.5, 113.5, -145.5, 113.5, -158, 105.2, -158, 100.5, -161, -102.5, -157.5, -102.5, -149.5, -113.5, -117, -113.5, -117, -109.1, -103.3, -88.5, -21, -45.6, 11.8, -95.3, -53.7, -312.6, -83.6, -333.5, -85.9, -333.5, -128, -349.5, -131.5, -349.5, -237, -372.6, -237, -382.5, -235.4, -382.5, -171.4, -418.5, -121.2, -418.5 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_scale = 0.0
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+margin_left = -80.4735
+margin_top = -94.4017
+margin_right = 96.5265
+margin_bottom = -80.4017
+custom_styles/fg = SubResource( 3 )
+custom_styles/bg = SubResource( 4 )
+step = 1.0
+value = 100.0
+rounded = true
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/damage = SubResource( 6 )
+anims/dock = SubResource( 5 )
+
+[node name="Ship_1_Dock" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 16
+script = SubResource( 7 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship_1_Dock"]
+position = Vector2( 53.7722, 0 )
+shape = SubResource( 8 )
+
+[node name="Ship_2_Dock" type="KinematicBody2D" parent="."]
+collision_layer = 16
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship_2_Dock"]
+position = Vector2( -65.3488, 0 )
+shape = SubResource( 9 )
