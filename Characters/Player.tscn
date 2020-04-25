@@ -21,8 +21,9 @@ var experience = 0
 var health = 100
 var player_nr = null
 var advertising = false
-var player2 = null
+
 var docked = false
+var is_master = false
 
 
 onready var BULLET = preload(\"res://Characters/Bullet.tscn\")
@@ -30,11 +31,15 @@ var bullet_allowed = true
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	connect(\"body_entered\", self, \"_on_enemy_body_enter\")
+	if(is_network_master()):
+		rpc(\"set_position\",position)
+	is_master = is_network_master()
 
 func setup(_nr, _position, _health):
 	max_health = _health
 	health = _health
 	position = _position
+	
 	if(_nr == 1):
 		#server gets ship 1
 		self.remove_child(get_node(\"Ship_2\"))
@@ -52,30 +57,30 @@ func done_setup():
 		print(\"Using Ship1\")
 	else:
 		print(\"Using Ship2\")
-	if is_my_ship():
+	if is_network_master():
 		print(\"I am controlling: \",player_nr)
 	else:
 		print(\"I Am not controlling this: \", player_nr)
 	print(\"Network master: \", get_network_master())
 	
 func _process(delta):
-	if is_network_master():
-		if(!is_currently_dock_slave()):
+	if is_master:
+		var is_slave = is_currently_dock_slave()
+		if(!is_slave):
 			process_movement(delta)
-			
-		if(!is_currently_dock_slave() or is_currently_dock_slave() and !Config.is_server):
+		if(is_slave or !docked):
 			if Input.is_action_pressed(\"shoot_1\"):
 				shoot()
 		if !docked:
 			if Input.is_action_just_pressed(\"dock_1\"):
-				set_advertising(!advertising)
+				rpc(\"set_advertising_puppet\",!advertising)
 				
 				
 func is_currently_dock_slave():
 	return docked and !Config.is_server 
 	
-func is_my_ship():
-	return player_nr == \"1\" and Config.is_server or player_nr != \"1\" and !Config.is_server
+func is_currently_dock_master():
+	return docked and Config.is_server
 	
 func shoot():
 	if bullet_allowed:
@@ -106,9 +111,8 @@ func process_movement(delta):
 		movement.y = 1 * SPEED
 	if((movement.x != 0 or movement.y != 0) and in_game(position + movement * delta)):
 		addPosition(movement*delta)
-		# if docked and Config.is_server:
-			# player2.addPosition(movement*delta)
-		
+		if docked and Config.is_server:
+			get_parent().move_second((movement*delta))
 
 func gainXP(amount):
 	experience += amount
@@ -126,7 +130,7 @@ func update_progress_bar(percent):
 	$CanvasLayer/HealthBar.value = percent
 
 func _on_enemy_body_enter(body):
-	print(\"Player collided with\",body.get_name())
+	# print(\"Player collided with\",body.get_name())
 	if \"Enemy\" in body.get_name():
 		inflictDamage(LOSS_AFTER_ENEMY_HIT)
 		body.kill_after_player_hit()
@@ -149,16 +153,6 @@ func kill_self():
 func enemy_left_out():
 	inflictDamage(LOSS_AFTER_ENEMY_HIT)
 
-func set_advertising(is_advertising):
-	advertising = is_advertising
-	if advertising:
-		$AnimationPlayer.get_animation(\"dock\").set_loop(true)
-		$AnimationPlayer.play(\"dock\")
-	else:
-		$AnimationPlayer.get_animation(\"dock\").set_loop(false)
-		
-func set_player(_player):
-	player2 = _player
 	
 func addPosition(_movement):
 	# rpc_id(Config.other_player_id, \"move_player\", {position: position})
@@ -168,15 +162,21 @@ puppetsync func set_position(p_position):
 	position = p_position
 	$CanvasLayer.offset = p_position
 	
-	
+puppetsync func set_advertising_puppet(is_advertising):
+	set_advertising(is_advertising)
+		
+func set_advertising(is_advertising):
+	advertising = is_advertising
+	if advertising:
+		$AnimationPlayer.get_animation(\"dock\").set_loop(true)
+		$AnimationPlayer.play(\"dock\")
+	else:
+		$AnimationPlayer.get_animation(\"dock\").set_loop(false)
+		
 func take_control():
-	player2.position.y = position.y
-	player2.set_advertising(false)
-	set_advertising(false)
-	player2.docked = true
-	docked = true
-	
-	
+	print(\"Trying to take control as \", player_nr, \" Other player is: \", Config.other_player_id)
+	get_parent().docking()
+
 "
 
 [sub_resource type="StyleBoxFlat" id=2]
@@ -209,7 +209,8 @@ script/source = "extends Area2D
 
 
 func _ready():
-	connect(\"body_entered\", self, \"_on_enemy_body_enter\")
+	if get_parent().is_network_master():
+		connect(\"body_entered\", self, \"_on_enemy_body_enter\")
 	
 func _on_enemy_body_enter(body):
 	print(\"Dock collided with \",body.get_name())

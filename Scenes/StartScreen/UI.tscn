@@ -356,8 +356,11 @@ text = "Select Your Space Ship!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
 [connection signal="pressed" from="cb_host" to="." method="_on_cb_host_pressed"]
 [connection signal="pressed" from="cb_client" to="." method="_on_cb_client_pressed"]
+[connection signal="gui_input" from="lbl_ip_and_port" to="." method="_on_lbl_ip_and_port_gui_input"]
 [connection signal="pressed" from="btn_connect" to="." method="_on_btn_connect_pressed"]
 [connection signal="pressed" from="cb_ship_pack_1" to="." method="_on_cb_ship_pack_1_pressed"]
 [connection signal="pressed" from="cb_ship_pack_2" to="." method="_on_cb_ship_pack_2_pressed"]

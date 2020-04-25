@@ -23,7 +23,7 @@ func _ready():
 		_timer.connect(\"timeout\", self, \"_on_Timer_timeout\")
 		_timer.set_wait_time(1/float(ENEMY_SPAWN_PER_SECOND))
 		_timer.set_one_shot(false) 
-		_timer.start()
+		# _timer.start()
 	spawn_player(Config.other_player_id)
 	spawn_player(get_tree().get_network_unique_id())
 	
@@ -31,7 +31,28 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
+	
+func docking():
+	rpc(\"set_docked\")
 
+sync func set_docked():
+	var position_y = null
+	for member in get_tree().get_nodes_in_group(\"player\"):
+		member.docked = true
+		member.set_advertising(false)
+		if position_y == null:
+			position_y = member.position.y
+		else:
+			member.position.y = position_y
+
+func move_second(movement):
+	rpc(\"_move_second\", Config.other_player_id, movement)
+
+sync func _move_second(other_player, movement):
+	var player2 = get_node(str(other_player))
+	player2.position += movement
+	player2.get_node(\"CanvasLayer\").offset = player2.position
+	
 func _on_Timer_timeout():
 	rng.randomize()
 	var my_random_number = rng.randf_range(50, get_viewport().size.y-50)
@@ -44,7 +65,7 @@ func spawn_player(_id):
 	player.setup(_id,Vector2(100,my_random_number),Config.PLAYER_HEALTH)
 	player.set_network_master(_id)
 	player.name = str(_id)
-	player.done_setup()
+	# player.done_setup()
 	self.add_child(player)
 	return player
 

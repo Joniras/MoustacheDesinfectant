@@ -7,7 +7,7 @@ extends Node
 #var SERVER_IP = "127.0.0.1"
 #var SERVER_PORT = 8439
 var MAX_PLAYERS = 2
-var my_ip = _get_public_ip()
+var my_ip = null
 var player_info = {}
 var my_info = {name = "player", ship = 1}
 
@@ -21,14 +21,15 @@ func _ready():
 	get_tree().connect("connected_to_server", self, "_connected_ok")
 	get_tree().connect("connection_failed", self, "_connected_fail")
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
-	
+	$HTTPRequest.connect("request_completed", self, "_on_request_completed")
+	$HTTPRequest.request("https://api.ipify.org/")
 	# close networking
 #	get_tree().set_network_peer(null)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _on_request_completed(result, response_code, headers, body):
+	my_ip = body.get_string_from_utf8()
+	get_node("lbl_ip_and_port").text = "Your IP: %s" % my_ip
 
 func _connect():
 	Config.is_server = get_node("cb_host").pressed
@@ -56,16 +57,6 @@ remote func register_player(info):
 	# Store the info
 	player_info[id] = info
 	
-
-static func _get_public_ip():
-	var rx = RegEx.new()
-	rx.compile("^([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)$")
-	var ips = IP.get_local_addresses()
-	for ip in ips:
-		var result = rx.search(ip)
-		if result and ip != "127.0.0.1":
-			return ip
-	return null
 
 ######## server callbacks
 func _player_connected(id):
@@ -147,3 +138,13 @@ func _on_cb_ship_pack_2_pressed():
 	my_info.ship = 2
 	get_node("cb_ship_pack_1").pressed = false
 	get_node("cb_ship_pack_2").pressed = true
+
+
+func _on_lbl_ip_and_port_gui_input(event):
+	print("in here", event)
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
+		self.on_click()
+
+func on_click():
+	print("is_click")
+	OS.set_clipboard(my_ip)
