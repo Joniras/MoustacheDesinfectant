@@ -36,7 +36,8 @@ func _process(_delta):
 func _on_Timer_timeout():
 	rng.randomize()
 	var my_random_number = rng.randf_range(50, get_viewport().size.y-50)
-	rpc(\"spawn_enemy\",ProjectSettings.get_setting(\"display/window/size/width\")+50,my_random_number,ENEMY_HEALTH,ENEMY_XP)
+	var asset_number = int(rng.randf_range(4, 8))
+	rpc(\"spawn_enemy\",ProjectSettings.get_setting(\"display/window/size/width\")+50,my_random_number,ENEMY_HEALTH,ENEMY_XP,asset_number)
 	
 func spawn_player(_id):
 	var player =  PLAYER.instance()
@@ -49,9 +50,9 @@ func spawn_player(_id):
 	self.add_child(player)
 	return player
 
-sync func spawn_enemy(_x,_y,_health,_xp):
+sync func spawn_enemy(_x,_y,_health,_xp,_asset):
 	var enemy =  ENEMY.instance()
-	enemy.setup(_health,_xp,Vector2(_x,_y))
+	enemy.setup(_health,_xp,Vector2(_x,_y),_asset)
 	self.add_child(enemy)
 "
 
