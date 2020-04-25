@@ -4,3 +4,6 @@ extends Node
 const SPEED = 100
 
 const PLAYER_HEALTH = 100
+
+var is_server = false
+var other_player_id = null

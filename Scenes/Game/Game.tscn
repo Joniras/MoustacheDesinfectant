@@ -24,9 +24,8 @@ func _ready():
 	_timer.set_wait_time(1/float(ENEMY_SPAWN_PER_SECOND))
 	_timer.set_one_shot(false) 
 	# _timer.start()
-	
-	var player2 = spawn_player(2, null)
-	spawn_player(1, player2)
+	spawn_player(Config.other_player_id)
+	spawn_player(get_tree().get_network_unique_id())
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -36,13 +35,13 @@ func _process(_delta):
 func _on_Timer_timeout():
 	spawn_enemy()
 	
-func spawn_player(player_nr, player1):
+func spawn_player(_id):
 	var player =  PLAYER.instance()
 	rng.randomize()
 	var my_random_number = rng.randf_range(100, get_viewport().size.y-100)
-	player.setup(player_nr,Vector2(100,my_random_number),Config.PLAYER_HEALTH)
-	if player1:
-		player.set_player(player1)
+	player.setup(_id,Vector2(100,my_random_number),Config.PLAYER_HEALTH)
+	player.set_network_master(_id)
+	player.done_setup()
 	self.add_child(player)
 	return player
 			
@@ -54,10 +53,10 @@ func spawn_enemy():
 	self.add_child(enemy)
 "
 
-[sub_resource type="RectangleShape2D" id=4]
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 60, 1 )
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=3]
 script/source = "extends ParallaxLayer
 
 
@@ -73,7 +72,7 @@ func _process(delta):
 	set_motion_offset(Vector2(offset,0))
 "
 
-[sub_resource type="Environment" id=6]
+[sub_resource type="Environment" id=4]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.2
@@ -93,31 +92,31 @@ collision_mask = 4
 [node name="bottom" type="CollisionShape2D" parent="Border"]
 position = Vector2( 500, 600 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="top" type="CollisionShape2D" parent="Border"]
 position = Vector2( 492.78, 0 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="left" type="CollisionShape2D" parent="Border"]
 position = Vector2( 0, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="right" type="CollisionShape2D" parent="Border"]
 position = Vector2( 1024, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_ignore_camera_zoom = true
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2( 1024, 0 )
-script = SubResource( 5 )
+script = SubResource( 3 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
 margin_right = 1024.0
@@ -130,4 +129,4 @@ __meta__ = {
 }
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 6 )
+environment = SubResource( 4 )

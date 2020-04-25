@@ -112,6 +112,7 @@ margin_top = 245.434
 margin_right = 881.474
 margin_bottom = 269.434
 rect_pivot_offset = Vector2( 72, 26.8557 )
+text = "6969"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -123,6 +124,7 @@ margin_top = 244.434
 margin_right = 552.008
 margin_bottom = 268.434
 rect_pivot_offset = Vector2( 72, 26.8557 )
+text = "localhost"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -133,6 +135,7 @@ margin_top = 178.277
 margin_right = 881.99
 margin_bottom = 202.277
 rect_pivot_offset = Vector2( 72, 26.8557 )
+text = "6969"
 __meta__ = {
 "_edit_use_anchors_": false
 }

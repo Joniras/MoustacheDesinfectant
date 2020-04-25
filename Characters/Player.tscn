@@ -25,7 +25,7 @@ var player2 = null
 var docked = false
 
 
-onready var BULLET = preload(\"res://Bullet.tscn\")
+onready var BULLET = preload(\"res://Characters/Bullet.tscn\")
 var bullet_allowed = true
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,6 +36,7 @@ func setup(_nr, _position, _health):
 	health = _health
 	position = _position
 	if(_nr == 1):
+		#server gets ship 1
 		self.remove_child(get_node(\"Ship_2\"))
 		self.remove_child(get_node(\"Ship_2_Shape\"))
 		self.remove_child(get_node(\"Ship_2_Dock\"))
@@ -46,18 +47,34 @@ func setup(_nr, _position, _health):
 	player_nr = str(_nr)
 	$CanvasLayer.offset = position
 	
+func done_setup():
+	if player_nr == \"1\":
+		print(\"Using Ship2\")
+	else:
+		print(\"Using Ship1\")
+	if is_my_ship():
+		print(\"I am controlling: \",player_nr)
+	else:
+		print(\"I Am not controlling this: \", player_nr)
+	print(\"Network master: \", get_network_master())
 	
 func _process(delta):
-	if(!(docked and player_nr == \"2\")):
-		process_movement(delta)
-		
-	if(!(docked and player_nr == \"1\")):
-		if Input.is_action_pressed(\"shoot_\"+player_nr):
-			shoot()
-	if !docked:
-		if Input.is_action_just_pressed(\"dock_\"+player_nr):
-			set_advertising(!advertising)
+	if is_my_ship():
+		if(!is_currently_dock_slave()):
+			process_movement(delta)
+			
+		if(is_currently_dock_slave()):
+			if Input.is_action_pressed(\"shoot_1\"):
+				shoot()
+		if !docked:
+			if Input.is_action_just_pressed(\"dock_1\"):
+				set_advertising(!advertising)
 	
+func is_currently_dock_slave():
+	return docked and !Config.is_server 
+	
+func is_my_ship():
+	return player_nr == \"1\" and Config.is_server or player_nr != \"1\" and !Config.is_server
 	
 func shoot():
 	if bullet_allowed:
@@ -71,7 +88,6 @@ func shoot():
 		_timer.set_one_shot(true) 
 		_timer.start()
 	
-	
 func spawn_bullet():
 	var bullet =  BULLET.instance()
 	bullet.setup(self,level * DAMAGE_PER_LEVEL,Vector2(position.x+20,position.y), BULLET_SPEED)
@@ -79,18 +95,18 @@ func spawn_bullet():
 	
 func process_movement(delta):
 	var movement = Vector2(0,0)
-	if Input.is_action_pressed(\"left_\"+player_nr) :
+	if Input.is_action_pressed(\"left_1\") :
 		movement.x = -1 * SPEED
-	if Input.is_action_pressed(\"right_\"+player_nr) :
+	if Input.is_action_pressed(\"right_1\") :
 		movement.x = 1 * SPEED
-	if Input.is_action_pressed(\"up_\"+player_nr) :
+	if Input.is_action_pressed(\"up_1\") :
 		movement.y = -1 * SPEED
-	if Input.is_action_pressed(\"down_\"+player_nr):
+	if Input.is_action_pressed(\"down_1\"):
 		movement.y = 1 * SPEED
 	if((movement.x != 0 or movement.y != 0) and in_game(position + movement * delta)):
 		addPosition(movement*delta)
-		if docked and player_nr == \"1\":
-			player2.addPosition(movement*delta)
+		# if docked and Config.is_server:
+			# player2.addPosition(movement*delta)
 		
 
 func gainXP(amount):
@@ -142,6 +158,16 @@ func set_player(_player):
 func addPosition(_movement):
 	position += _movement 
 	$CanvasLayer.offset = position
+	# rpc_id(Config.other_player_id, \"move_player\", {position: position})
+	rpc(\"move_remote\",position)
+	print(\"Casting position\")
+	
+	# puppet + other_id worked somehow remote + other_id worked
+master func move_remote(_position):
+	print(\"Receiving position\")
+	position = _position
+	$CanvasLayer.offset = _position
+	
 	
 func take_control():
 	player2.position.y = position.y
@@ -153,13 +179,13 @@ func take_control():
 	
 "
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.00392157, 0.552941, 0.141176, 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.239216, 0.239216, 0.239216, 1 )
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=4]
 resource_name = "damage"
 
 [sub_resource type="Animation" id=5]
@@ -178,7 +204,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 2, 1, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=6]
 script/source = "extends Area2D
 
 
@@ -194,9 +220,9 @@ func _on_enemy_body_enter(body):
 			get_parent().take_control()
 "
 
-[sub_resource type="RectangleShape2D" id=8]
+[sub_resource type="RectangleShape2D" id=7]
 
-[sub_resource type="RectangleShape2D" id=9]
+[sub_resource type="RectangleShape2D" id=8]
 
 [node name="Player" type="Area2D" groups=[
 "player",
@@ -229,8 +255,8 @@ margin_left = -80.4735
 margin_top = -94.4017
 margin_right = 96.5265
 margin_bottom = -80.4017
-custom_styles/fg = SubResource( 3 )
-custom_styles/bg = SubResource( 4 )
+custom_styles/fg = SubResource( 2 )
+custom_styles/bg = SubResource( 3 )
 step = 1.0
 value = 100.0
 rounded = true
@@ -240,17 +266,17 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/damage = SubResource( 6 )
+anims/damage = SubResource( 4 )
 anims/dock = SubResource( 5 )
 
 [node name="Ship_1_Dock" type="Area2D" parent="."]
 collision_layer = 16
 collision_mask = 16
-script = SubResource( 7 )
+script = SubResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ship_1_Dock"]
 position = Vector2( 53.7722, 0 )
-shape = SubResource( 8 )
+shape = SubResource( 7 )
 
 [node name="Ship_2_Dock" type="KinematicBody2D" parent="."]
 collision_layer = 16
@@ -258,4 +284,4 @@ collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ship_2_Dock"]
 position = Vector2( -65.3488, 0 )
-shape = SubResource( 9 )
+shape = SubResource( 8 )

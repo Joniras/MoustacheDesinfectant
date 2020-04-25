@@ -31,10 +31,10 @@ func _ready():
 #	pass
 
 func _connect():
-	var is_server = get_node("cb_host").pressed
-	print("is_server = %s" % is_server)
+	Config.is_server = get_node("cb_host").pressed
+	print("is_server = %s" % Config.is_server)
 	
-	if (is_server):
+	if (Config.is_server):
 		var server_port = get_node("txt_server_port").text
 		var peer = NetworkedMultiplayerENet.new()
 		peer.create_server(int(server_port), MAX_PLAYERS)
@@ -74,6 +74,10 @@ func _player_connected(id):
 	rpc_id(id, "register_player", my_info)
 	
 	var name = id
+	if Config.is_server and id != 1:
+		Config.other_player_id = id
+	else:
+		Config.other_player_id = id
 	if (id == 1):
 		name = "server"
 	print("%s connected" % name)
@@ -122,4 +126,4 @@ func _show_controls(is_host):
 	get_node("lbl_port").visible = !is_host
 
 func _show_select_spaceship_package():
-	pass
+	get_tree().change_scene("res://Scenes/Game/Game.tscn")
