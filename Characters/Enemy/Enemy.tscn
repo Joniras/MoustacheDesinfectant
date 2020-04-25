@@ -7,7 +7,6 @@ script/source = "extends KinematicBody2D
 
 
 onready var LABEL = preload(\"res://Characters/Enemy/DamageLabel.tscn\")
-onready var virus_sprite = get_node(\"CanvasLayer/Sprite\")
 var max_health = null
 var texture_4 = preload(\"res://assets/enemies/virus_state_4.png\")
 var texture_5 = preload(\"res://assets/enemies/virus_state_5.png\")
@@ -18,23 +17,22 @@ var texture_7 = preload(\"res://assets/enemies/virus_state_7.png\")
 # var a = 2
 var xp = null
 var health = null
-var asset = 4
 
-func setup(_health, _xp, _position):
+func setup(_health, _xp, _position, _asset):
 	max_health = _health
 	xp = _xp
 	position = _position
-	asset = rand_range(4, 8)
-	if (asset == 4):
-		virus_sprite.set_texture(texture_4)
-	elif (asset == 5):
-		virus_sprite.set_texture(texture_5)
-	elif (asset == 6):
-		virus_sprite.set_texture(texture_6)
-	elif (asset == 7):
-		virus_sprite.set_texture(texture_7)
-	
-	
+	var virus_sprite = get_node(\"CanvasLayer/Sprite\")
+	if (_asset == 4):
+		virus_sprite.texture = texture_4
+	elif (_asset == 5):
+		virus_sprite.texture = texture_5
+	elif (_asset == 6):
+		virus_sprite.texture = texture_6
+	elif (_asset == 7):
+		virus_sprite.texture = texture_7
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	health = max_health

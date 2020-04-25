@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Scenes/StartScreen/networking.gd" type="Script" id=1]
 [ext_resource path="res://fonts/thunderstrike/thunderstrikelaser.ttf" type="DynamicFontData" id=2]
@@ -26,49 +26,53 @@ use_filter = true
 font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=5]
-size = 22
-font_data = ExtResource( 4 )
+use_filter = true
+font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=6]
 size = 22
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=7]
+size = 22
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=8]
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=9]
 size = 62
 use_filter = true
 font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=9]
-size = 26
-use_filter = true
-font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=10]
 size = 26
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="Environment" id=11]
+[sub_resource type="DynamicFont" id=11]
+size = 26
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="Environment" id=12]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.47
 glow_blend_mode = 0
 glow_hdr_threshold = 0.75
 
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="DynamicFont" id=13]
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=14]
 size = 24
 use_filter = true
 font_data = ExtResource( 6 )
 
-[sub_resource type="DynamicFont" id=14]
+[sub_resource type="DynamicFont" id=15]
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
@@ -139,6 +143,8 @@ margin_top = 244.434
 margin_right = 552.008
 margin_bottom = 268.434
 rect_pivot_offset = Vector2( 72, 26.8557 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 text = "localhost"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -150,8 +156,8 @@ margin_top = 175.834
 margin_right = 880.324
 margin_bottom = 199.834
 rect_pivot_offset = Vector2( 72, 26.8557 )
-custom_fonts/font = SubResource( 4 )
-custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 text = "6969"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -163,7 +169,7 @@ margin_left = 357.708
 margin_top = 243.384
 margin_right = 397.708
 margin_bottom = 269.384
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
@@ -178,7 +184,7 @@ margin_left = 650.474
 margin_top = 242.434
 margin_right = 710.474
 margin_bottom = 268.434
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
@@ -192,7 +198,7 @@ margin_left = 817.515
 margin_top = 520.589
 margin_right = 914.515
 margin_bottom = 545.589
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_pressed = Color( 1, 0.356863, 0.823529, 1 )
@@ -206,7 +212,7 @@ margin_left = 45.3572
 margin_top = 56.2135
 margin_right = 981.357
 margin_bottom = 137.214
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 text = "Moustache Desinfectant"
 __meta__ = {
@@ -218,7 +224,7 @@ margin_left = 42.3572
 margin_top = 54.2135
 margin_right = 978.357
 margin_bottom = 135.214
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 text = "Moustache Desinfectant"
 __meta__ = {
@@ -230,7 +236,7 @@ margin_left = 137.55
 margin_top = 174.05
 margin_right = 234.55
 margin_bottom = 207.05
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
@@ -244,7 +250,7 @@ margin_left = 138.15
 margin_top = 241.85
 margin_right = 261.15
 margin_bottom = 272.85
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 11 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
@@ -254,14 +260,14 @@ __meta__ = {
 }
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 11 )
+environment = SubResource( 12 )
 
 [node name="lbl_name" type="Label" parent="."]
 margin_left = 306.45
 margin_top = 315.05
 margin_right = 469.45
 margin_bottom = 351.05
-custom_fonts/font = SubResource( 12 )
+custom_fonts/font = SubResource( 13 )
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 0, 0.882353, 1, 1 )
@@ -276,7 +282,7 @@ margin_top = 313.0
 margin_right = 867.0
 margin_bottom = 350.0
 rect_pivot_offset = Vector2( 72, 26.8557 )
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 14 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 text = "Magnificent Moustache
 "
@@ -291,7 +297,7 @@ margin_top = 243.277
 margin_right = 881.99
 margin_bottom = 267.277
 rect_pivot_offset = Vector2( 72, 26.8557 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 text = "6969"
 __meta__ = {
@@ -348,7 +354,7 @@ margin_left = 129.474
 margin_top = 403.158
 margin_right = 169.474
 margin_bottom = 417.158
-custom_fonts/font = SubResource( 14 )
+custom_fonts/font = SubResource( 15 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
