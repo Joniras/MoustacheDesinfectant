@@ -54,10 +54,10 @@ func spawn_enemy():
 	self.add_child(enemy)
 "
 
-[sub_resource type="RectangleShape2D" id=4]
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 60, 1 )
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=3]
 script/source = "extends ParallaxLayer
 
 
@@ -73,7 +73,7 @@ func _process(delta):
 	set_motion_offset(Vector2(offset,0))
 "
 
-[sub_resource type="Environment" id=6]
+[sub_resource type="Environment" id=4]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.2
@@ -93,31 +93,31 @@ collision_mask = 4
 [node name="bottom" type="CollisionShape2D" parent="Border"]
 position = Vector2( 500, 600 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="top" type="CollisionShape2D" parent="Border"]
 position = Vector2( 492.78, 0 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="left" type="CollisionShape2D" parent="Border"]
 position = Vector2( 0, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="right" type="CollisionShape2D" parent="Border"]
 position = Vector2( 1024, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_ignore_camera_zoom = true
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2( 1024, 0 )
-script = SubResource( 5 )
+script = SubResource( 3 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
 margin_right = 1024.0
@@ -130,4 +130,4 @@ __meta__ = {
 }
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 6 )
+environment = SubResource( 4 )
