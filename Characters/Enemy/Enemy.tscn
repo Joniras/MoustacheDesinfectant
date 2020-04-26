@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://assets/enemies/virus_state_4.png" type="Texture" id=1]
+[ext_resource path="res://assets/enemies/virus_state_7.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
@@ -79,10 +79,10 @@ func damage_all_players():
 radius = 72.938
 
 [sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0.00392157, 0.552941, 0.141176, 1 )
+bg_color = Color( 0.858824, 0.0431373, 0.85098, 1 )
 
 [sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.239216, 0.239216, 0.239216, 1 )
+bg_color = Color( 1, 0.764706, 0.576471, 1 )
 
 [node name="Enemy" type="KinematicBody2D" groups=[
 "enemy",
@@ -102,10 +102,10 @@ scale = Vector2( 0.0876458, 0.0876458 )
 texture = ExtResource( 1 )
 
 [node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
-margin_left = -37.1382
-margin_top = -20.5495
-margin_right = 155.862
-margin_bottom = -4.54953
+margin_left = -40.7871
+margin_top = -36.8621
+margin_right = 152.213
+margin_bottom = -20.8621
 rect_scale = Vector2( 0.444292, 0.454467 )
 custom_styles/fg = SubResource( 3 )
 custom_styles/bg = SubResource( 4 )
