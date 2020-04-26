@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://sounds/music.wav" type="AudioStream" id=1]
 [ext_resource path="res://sounds/click.wav" type="AudioStream" id=2]
 [ext_resource path="res://sounds/pew.wav" type="AudioStream" id=3]
 [ext_resource path="res://sounds/explosion.wav" type="AudioStream" id=4]
+[ext_resource path="res://sounds/dock.wav" type="AudioStream" id=5]
 
 [node name="Sound" type="Node2D"]
 
@@ -22,3 +23,4 @@ stream = ExtResource( 3 )
 stream = ExtResource( 4 )
 
 [node name="AudioStreamPlayerDock" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
