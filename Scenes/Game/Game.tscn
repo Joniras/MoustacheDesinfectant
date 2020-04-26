@@ -94,9 +94,12 @@ sync func ultimate():
 	# print(\"Doing ultimate\")
 	$Particles2D.emitting = true
 	ult_time = 0
+	var amount = 0.0
 	for member in get_tree().get_nodes_in_group(\"enemy\"):
+		amount += member.xp
 		self.remove_child(member)
 	rpc(\"undock\")
+	rpc(\"_gainXP\", amount*0.6)
 	
 func docking():
 	rpc(\"set_docked\")
@@ -177,6 +180,13 @@ func remove_me(child, is_me):
 	remove_child(child)
 	if docked or get_tree().get_nodes_in_group(\"player\").size() <= 0:
 		rpc(\"game_over\")
+
+func gainXP(amount):
+	rpc(\"_gainXP\", amount*0.6)
+	
+sync func _gainXP(amount):
+	for member in get_tree().get_nodes_in_group(\"player\"):
+		member.addXP(amount)
 "
 
 [sub_resource type="RectangleShape2D" id=2]
