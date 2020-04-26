@@ -17,6 +17,7 @@ _global_script_class_icons={
 
 config/name="Gamejam"
 run/main_scene="res://Scenes/StartScreen/UI.tscn"
+boot_splash/image="res://assets/bg/banner.png"
 config/icon="res://icon.png"
 
 [autoload]
