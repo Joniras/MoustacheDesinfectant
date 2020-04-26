@@ -11,13 +11,19 @@
 script/source = "extends Node2D
 
 
-const ENEMY_SPAWN_PER_SECOND = 0.2
-const ENEMY_HEALTH = 150
-const ENEMY_XP = 10
-const TIME_FOR_ULT = 10
+const ENEMY_SPAWN_PER_SECOND = 1 # base value for spawning enemies
+const ENEMY_SCALE_PER_SECOND = 0.02 # spawn increase of enemy after 1 second
+
+const ENEMY_BASE_HEALTH = 100 # health enemies spawn with
+const ENEMY_HEALTH_SCALE_PER_SECOND = 1 # health enemies spawn with
+const ENEMY_XP = 10 # xp enemies drop
+const ENEMY_HEALTH_LEVEL = 50 # increase in health with higher level (level 4 = 200 Health)
+
+const TIME_FOR_ULT = 10 # time needed to compelte ult load
+const TIMEOUT_FOR_ULT = 4 # Timeout where nothing spawns
 
 var time_mult = 1.0
-var time = 0
+var time = 0.1
 var docked = false
 var ult_time = 0
 var _enemyTimer = null
@@ -34,15 +40,24 @@ func _ready():
 	if Config.is_server:
 		_enemyTimer = Timer.new()
 		self.add_child(_enemyTimer)
-		_enemyTimer.connect(\"timeout\", self, \"_on_Timer_timeout\")
-		_enemyTimer.set_wait_time(1/float(ENEMY_SPAWN_PER_SECOND))
-		_enemyTimer.set_one_shot(false) 
-		_enemyTimer.start()
+		updateEnemyTimer()
+		
 	spawn_player(Config.other_player_id)
 	spawn_player(get_tree().get_network_unique_id())
 	$lbl_my_name.text = Config.my_info.name
 	$other_name.text = Config.player_info[Config.other_player_id].name
 	$UltimateBar.visible = false
+
+func updateEnemyTimer():
+	stopEnemies()
+	_enemyTimer.connect(\"timeout\", self, \"_on_Timer_timeout\")
+	_enemyTimer.set_wait_time(1/(float(ENEMY_SPAWN_PER_SECOND)+(float(time)*ENEMY_SCALE_PER_SECOND)))
+	_enemyTimer.set_one_shot(true) 
+	_enemyTimer.start()
+	
+func stopEnemies():
+	if _enemyTimer:
+		_enemyTimer.stop()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -62,6 +77,16 @@ func _process(_delta):
 func do_ultimate():
 	if(Config.is_server):
 		rpc(\"ultimate\")
+		stopEnemies()
+		var ultimate_timeout = Timer.new()
+		self.add_child(_enemyTimer)
+		ultimate_timeout.connect(\"timeout\", self, \"_on_ultimate_done\")
+		ultimate_timeout.set_wait_time(TIMEOUT_FOR_ULT)
+		ultimate_timeout.set_one_shot(true) 
+		ultimate_timeout.start()
+
+func _on_ultimate_done():
+	updateEnemyTimer()
 
 sync func ultimate():
 	Sound.get_node(\"AudioStreamPlayerExplosion\").play()
@@ -113,10 +138,14 @@ sync func _move_second(other_player, position):
 	var player2 = get_node(str(other_player)).slave_position(position)
 	
 func _on_Timer_timeout():
+	updateEnemyTimer()
 	rng.randomize()
-	var my_random_number = rng.randf_range(50, get_viewport().size.y-50)
+	var e_position_y = rng.randf_range(50, get_viewport().size.y-50)
 	var asset_number = int(rng.randf_range(4, 8))
-	rpc(\"spawn_enemy\",ProjectSettings.get_setting(\"display/window/size/width\")+50,my_random_number,ENEMY_HEALTH,ENEMY_XP,asset_number)
+	var level = asset_number-4
+	var e_health = (float(ENEMY_BASE_HEALTH)+(level*ENEMY_HEALTH_LEVEL))+(time*float(ENEMY_HEALTH_SCALE_PER_SECOND))
+	var e_position_x = ProjectSettings.get_setting(\"display/window/size/width\")+50
+	rpc(\"spawn_enemy\",e_position_x,e_position_y,e_health,ENEMY_XP,asset_number)
 	
 func spawn_player(_id):
 	var player =  PLAYER.instance()

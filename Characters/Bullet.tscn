@@ -43,7 +43,6 @@ func setup(_player, _damage, _position,_speed, _type):
 func _process(delta):
 	position += Vector2(speed*delta,0)
 
-	
 
 func kill_bullet():
 	get_parent().remove_child(self)
