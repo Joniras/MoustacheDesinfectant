@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://sounds/music.wav" type="AudioStream" id=1]
+[ext_resource path="res://sounds/click.wav" type="AudioStream" id=2]
+[ext_resource path="res://sounds/pew.wav" type="AudioStream" id=3]
+[ext_resource path="res://sounds/explosion.wav" type="AudioStream" id=4]
+
+[node name="Sound" type="Node2D"]
+
+[node name="AudioStreamPlayerMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+autoplay = true
+mix_target = 1
+
+[node name="AudioStreamPlayerClick" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="AudioStreamPlayerPew" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+
+[node name="AudioStreamPlayerExplosion" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+
+[node name="AudioStreamPlayerDock" type="AudioStreamPlayer" parent="."]

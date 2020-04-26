@@ -100,6 +100,7 @@ func shoot():
 		_timer.set_wait_time(1/float(BULLETS_PER_SECOND))
 		_timer.set_one_shot(true) 
 		_timer.start()
+		Sound.get_node(\"AudioStreamPlayerPew\").play()
 	
 puppetsync func spawn_bullet():
 	var bullet =  BULLET.instance()
@@ -110,6 +111,7 @@ puppetsync func spawn_bullet():
 		bullet_damage *= BULLET_DAMAGE_DOCKED
 	bullet.setup(self,bullet_damage,Vector2(position.x+20,position.y), bullet_speed, BulletType.Diamond)
 	$\"../\".add_child(bullet)
+	Sound.get_node(\"AudioStreamPlayerPew\").play()
 	
 func process_movement(delta):
 	var movement = Vector2(0,0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Scenes/StartScreen/networking.gd" type="Script" id=1]
 [ext_resource path="res://fonts/thunderstrike/thunderstrikelaser.ttf" type="DynamicFontData" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://fonts/thunderstrike/thunderstrike.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://assets/ships/ship_1.png" type="Texture" id=7]
 [ext_resource path="res://assets/ships/ship_2.png" type="Texture" id=8]
+[ext_resource path="res://assets/ships/ship_2_1.png" type="Texture" id=9]
+[ext_resource path="res://assets/ships/ship_2_2.png" type="Texture" id=10]
 
 [sub_resource type="Theme" id=1]
 
@@ -76,6 +78,35 @@ font_data = ExtResource( 6 )
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
+
+[sub_resource type="Animation" id=16]
+resource_name = "UpAndDown"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("space_ship_1:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -5 ), Vector2( 0, 5 ), Vector2( 0, -5 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("space_ship_2:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.2, 1.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 5 ), Vector2( 0, -5 ) ]
+}
 
 [node name="LobbyScene" type="Node2D"]
 script = ExtResource( 1 )
@@ -307,7 +338,7 @@ __meta__ = {
 [node name="cb_ship_pack_1" type="CheckBox" parent="."]
 margin_left = 89.0
 margin_top = 453.0
-margin_right = 281.0
+margin_right = 264.0
 margin_bottom = 584.0
 mouse_default_cursor_shape = 2
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
@@ -329,26 +360,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="space_ship_pack_1_1" type="Sprite" parent="."]
-position = Vector2( 165.789, 518.947 )
-scale = Vector2( 0.158663, 0.127489 )
-texture = ExtResource( 7 )
-
-[node name="space_ship_pack_2_1" type="Sprite" parent="."]
-position = Vector2( 420.789, 518.947 )
-scale = Vector2( 0.158663, 0.127489 )
-texture = ExtResource( 7 )
-
-[node name="space_ship_pack_1_2" type="Sprite" parent="."]
-position = Vector2( 229.789, 518.947 )
-scale = Vector2( 0.158663, 0.127489 )
-texture = ExtResource( 8 )
-
-[node name="space_ship_pack_2_2" type="Sprite" parent="."]
-position = Vector2( 485.789, 518.947 )
-scale = Vector2( 0.158663, 0.127489 )
-texture = ExtResource( 8 )
-
 [node name="lbl_select_space_ship" type="Label" parent="."]
 margin_left = 129.474
 margin_top = 403.158
@@ -358,10 +369,42 @@ custom_fonts/font = SubResource( 15 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
-text = "Select Your Space Ship!"
+text = "Select Your Space Ships!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="space_ship_1" type="Node2D" parent="."]
+position = Vector2( 0, 2.37588 )
+rotation = 1.5708
+
+[node name="space_ship_pack_1_1" type="Sprite" parent="space_ship_1"]
+position = Vector2( 482.038, -182.109 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 7 )
+
+[node name="space_ship_pack_1_2" type="Sprite" parent="space_ship_1"]
+position = Vector2( 541.595, -181.826 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 8 )
+
+[node name="space_ship_2" type="Node2D" parent="."]
+position = Vector2( 0, -4.37588 )
+rotation = 1.5708
+
+[node name="space_ship_pack_2_1" type="Sprite" parent="space_ship_2"]
+position = Vector2( 492.27, -449.217 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 9 )
+
+[node name="space_ship_pack_2_2" type="Sprite" parent="space_ship_2"]
+position = Vector2( 545.036, -450.461 )
+scale = Vector2( 0.158663, 0.127489 )
+texture = ExtResource( 10 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "UpAndDown"
+anims/UpAndDown = SubResource( 16 )
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 [connection signal="pressed" from="cb_host" to="." method="_on_cb_host_pressed"]

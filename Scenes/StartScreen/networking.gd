@@ -25,6 +25,12 @@ func _ready():
 #	get_tree().set_network_peer(null)
 
 
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_just_pressed("Left_Mouse"):
+		Sound.get_node("AudioStreamPlayerClick").play()
+	pass
+	
 func _on_request_completed(result, response_code, headers, body):
 	my_ip = body.get_string_from_utf8()
 	get_node("lbl_ip_and_port").text = "Your IP: %s" % my_ip
@@ -115,10 +121,8 @@ func _show_controls(is_host):
 	get_node("lbl_ip").visible = !is_host
 	get_node("lbl_port").visible = !is_host
 	get_node("lbl_select_space_ship").visible = is_host
-	get_node("space_ship_pack_1_1").visible = is_host
-	get_node("space_ship_pack_1_2").visible = is_host
-	get_node("space_ship_pack_2_1").visible = is_host
-	get_node("space_ship_pack_2_2").visible = is_host
+	get_node("space_ship_1").visible = is_host
+	get_node("space_ship_2").visible = is_host
 	get_node("cb_ship_pack_1").visible = is_host
 	get_node("cb_ship_pack_2").visible = is_host
 
