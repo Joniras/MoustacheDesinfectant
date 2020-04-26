@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://assets/bg/parallax/background_l2.png" type="Texture" id=1]
 [ext_resource path="res://assets/enemies/virus_state_2.png" type="Texture" id=2]
@@ -41,7 +41,6 @@ func _ready():
 		_enemyTimer = Timer.new()
 		self.add_child(_enemyTimer)
 		updateEnemyTimer()
-		
 	spawn_player(Config.other_player_id)
 	spawn_player(get_tree().get_network_unique_id())
 	$lbl_my_name.text = Config.my_info.name
@@ -70,8 +69,10 @@ func _process(_delta):
 			if(ult_time >= TIME_FOR_ULT):
 				do_ultimate()
 	else:
-		if Input.is_action_just_pressed(\"shoot_1\"):
-				get_tree().change_scene(\"res://Scenes/StartScreen/UI.tscn\")
+		if Input.is_action_just_pressed(\"dock_1\"):
+			# close networking
+			get_tree().set_network_peer(null)
+			get_tree().change_scene(\"res://Scenes/StartScreen/UI.tscn\")
 	
 	
 func do_ultimate():
@@ -273,6 +274,11 @@ tracks/0/keys = {
 "values": [ Vector2( 10.0001, 48.0002 ), Vector2( 10, 54 ), Vector2( 10, 48 ) ]
 }
 
+[sub_resource type="DynamicFont" id=14]
+size = 81
+use_filter = true
+font_data = ExtResource( 3 )
+
 [sub_resource type="DynamicFont" id=13]
 size = 24
 use_filter = true
@@ -471,27 +477,27 @@ __meta__ = {
 autoplay = "zittern"
 anims/zittern = SubResource( 12 )
 
-[node name="lbl_game_over" type="Label" parent="."]
+[node name="lbl_game_over2" type="Label" parent="."]
 visible = false
-margin_left = 252.358
-margin_top = 182.214
-margin_right = 752.358
-margin_bottom = 263.214
-custom_fonts/font = SubResource( 9 )
-custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+margin_left = 230.515
+margin_top = 189.324
+margin_right = 795.515
+margin_bottom = 280.324
+custom_fonts/font = SubResource( 14 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 text = "Game Over"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lbl_game_over2" type="Label" parent="."]
+[node name="lbl_game_over" type="Label" parent="."]
 visible = false
-margin_left = 255.358
-margin_top = 184.214
-margin_right = 755.358
-margin_bottom = 265.214
-custom_fonts/font = SubResource( 9 )
-custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+margin_left = 226.515
+margin_top = 185.324
+margin_right = 789.515
+margin_bottom = 276.324
+custom_fonts/font = SubResource( 14 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 text = "Game Over"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -499,25 +505,25 @@ __meta__ = {
 
 [node name="lbl_press_sth" type="Label" parent="."]
 visible = false
-margin_left = 287.475
-margin_top = 333.158
-margin_right = 653.475
-margin_bottom = 361.158
+margin_left = 333.962
+margin_top = 309.078
+margin_right = 699.962
+margin_bottom = 337.078
 custom_fonts/font = SubResource( 13 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
-text = "select [shoot] to restart"
+text = "press [dock] to restart"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="lbl_died" type="Label" parent="."]
 visible = false
-margin_left = 447.475
-margin_top = 447.158
-margin_right = 647.475
-margin_bottom = 475.158
+margin_left = 431.271
+margin_top = 429.468
+margin_right = 566.271
+margin_bottom = 457.468
 custom_fonts/font = SubResource( 13 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
