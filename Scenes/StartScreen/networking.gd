@@ -8,8 +8,6 @@ extends Node
 #var SERVER_PORT = 8439
 var MAX_PLAYERS = 2
 var my_ip = null
-var player_info = {}
-var my_info = {name = "player", ship = 1}
 
 
 # Called when the node enters the scene tree for the first time.
@@ -34,7 +32,7 @@ func _on_request_completed(result, response_code, headers, body):
 func _connect():
 	Config.is_server = get_node("cb_host").pressed
 	print("is_server = %s" % Config.is_server)
-	my_info.name = get_node("txt_name").text
+	Config.my_info.name = get_node("txt_name").text
 	
 	if (Config.is_server):
 		var server_port = get_node("txt_server_port").text
@@ -55,7 +53,7 @@ remote func register_player(info):
 	var id = get_tree().get_rpc_sender_id()
 	print("Received player info: %s" % info)
 	# Store the info
-	player_info[id] = info
+	Config.player_info[id] = info
 	
 
 ######## server callbacks
@@ -63,7 +61,7 @@ func _player_connected(id):
 	if (id < 1): # this should be treated as an invalid connection per docs
 		pass
 	
-	rpc_id(id, "register_player", my_info)
+	rpc_id(id, "register_player", Config.my_info)
 	
 	var name = id
 	if Config.is_server and id != 1:
@@ -78,8 +76,8 @@ func _player_connected(id):
 	_show_select_spaceship_package()
 
 func _player_disconnected(id):
-	var disconnected_name = player_info.get(id).name
-	player_info.erase(id)
+	var disconnected_name = Config.player_info.get(id).name
+	Config.player_info.erase(id)
 	print("%s disconnected." % disconnected_name)
 	
 ######## client callbacks
@@ -129,13 +127,13 @@ func _show_select_spaceship_package():
 
 
 func _on_cb_ship_pack_1_pressed():
-	my_info.ship = 1
+	Config.my_info.ship = 1
 	get_node("cb_ship_pack_1").pressed = true
 	get_node("cb_ship_pack_2").pressed = false
 
 
 func _on_cb_ship_pack_2_pressed():
-	my_info.ship = 2
+	Config.my_info.ship = 2
 	get_node("cb_ship_pack_1").pressed = false
 	get_node("cb_ship_pack_2").pressed = true
 

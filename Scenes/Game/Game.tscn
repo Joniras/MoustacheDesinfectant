@@ -1,15 +1,19 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://assets/bg/background.png" type="Texture" id=1]
+[ext_resource path="res://assets/bg/background_cp_sun.png" type="Texture" id=1]
 [ext_resource path="res://assets/enemies/virus_state_2.png" type="Texture" id=2]
+[ext_resource path="res://fonts/thunderstrike/thunderstrikehalf.ttf" type="DynamicFontData" id=3]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=16]
 script/source = "extends Node2D
 
 
 const ENEMY_SPAWN_PER_SECOND = 1
 const ENEMY_HEALTH = 150
 const ENEMY_XP = 10
+
+var time_mult = 1.0
+var time = 0
 
 onready var ENEMY = preload(\"res://Characters/Enemy/Enemy.tscn\")
 
@@ -18,20 +22,23 @@ onready var PLAYER = preload(\"res://Characters/Player.tscn\")
 var rng = RandomNumberGenerator.new()
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	set_process(true)
 	if Config.is_server:
 		var _timer = Timer.new()
 		self.add_child(_timer)
 		_timer.connect(\"timeout\", self, \"_on_Timer_timeout\")
 		_timer.set_wait_time(1/float(ENEMY_SPAWN_PER_SECOND))
 		_timer.set_one_shot(false) 
-		# _timer.start()
+		_timer.start()
 	spawn_player(Config.other_player_id)
 	spawn_player(get_tree().get_network_unique_id())
-	
+	$my_name.text = Config.my_info.name
+	$other_name.text = Config.player_info[Config.other_player_id].name
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	time += _delta * time_mult
+	$score.text = str(float(round(time*10))/10)
 	
 func docking():
 	rpc(\"set_docked\")
@@ -46,13 +53,11 @@ sync func set_docked():
 		else:
 			member.position.y = position_y
 
-func move_second(movement):
-	rpc(\"_move_second\", Config.other_player_id, movement)
+func move_second(position):
+	rpc_unreliable(\"_move_second\", Config.other_player_id, position)
 
-sync func _move_second(other_player, movement):
-	var player2 = get_node(str(other_player))
-	player2.position += movement
-	player2.get_node(\"CanvasLayer\").offset = player2.position
+sync func _move_second(other_player, position):
+	var player2 = get_node(str(other_player)).slave_position(position)
 	
 func _on_Timer_timeout():
 	rng.randomize()
@@ -62,9 +67,7 @@ func _on_Timer_timeout():
 	
 func spawn_player(_id):
 	var player =  PLAYER.instance()
-	rng.randomize()
-	var my_random_number = rng.randf_range(100, get_viewport().size.y-100)
-	player.setup(_id,Vector2(100,my_random_number),Config.PLAYER_HEALTH)
+	player.setup(_id,Vector2(100,300),Config.PLAYER_HEALTH)
 	player.set_network_master(_id)
 	player.name = str(_id)
 	# player.done_setup()
@@ -75,12 +78,15 @@ sync func spawn_enemy(_x,_y,_health,_xp,_asset):
 	var enemy =  ENEMY.instance()
 	enemy.setup(_health,_xp,Vector2(_x,_y),_asset)
 	self.add_child(enemy)
+	
+func update_health_bar(percent):
+	$CanvasLayer/HealthBar.value = percent
 "
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=17]
 extents = Vector2( 60, 1 )
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=18]
 script/source = "extends ParallaxLayer
 
 
@@ -96,7 +102,7 @@ func _process(delta):
 	set_motion_offset(Vector2(offset,0))
 "
 
-[sub_resource type="Environment" id=4]
+[sub_resource type="Environment" id=19]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.2
@@ -105,7 +111,7 @@ glow_hdr_threshold = 0.05
 glow_hdr_luminance_cap = 10.0
 glow_bicubic_upscale = true
 
-[sub_resource type="ParticlesMaterial" id=5]
+[sub_resource type="ParticlesMaterial" id=20]
 flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
 spread = 180.0
@@ -117,8 +123,19 @@ orbit_velocity_random = 0.0
 angle = 297.9
 angle_random = 0.1
 
+[sub_resource type="DynamicFont" id=15]
+size = 24
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.00392157, 0.552941, 0.141176, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.239216, 0.239216, 0.239216, 1 )
+
 [node name="Game" type="Node2D"]
-script = SubResource( 1 )
+script = SubResource( 16 )
 
 [node name="Border" type="StaticBody2D" parent="."]
 visible = false
@@ -128,34 +145,35 @@ collision_mask = 4
 [node name="bottom" type="CollisionShape2D" parent="Border"]
 position = Vector2( 500, 600 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 17 )
 
 [node name="top" type="CollisionShape2D" parent="Border"]
 position = Vector2( 492.78, 0 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 17 )
 
 [node name="left" type="CollisionShape2D" parent="Border"]
 position = Vector2( 0, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 17 )
 
 [node name="right" type="CollisionShape2D" parent="Border"]
 position = Vector2( 1024, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 17 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_ignore_camera_zoom = true
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2( 1024, 0 )
-script = SubResource( 3 )
+script = SubResource( 18 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
-margin_right = 1024.0
+margin_left = 14.0001
+margin_right = 1038.0
 margin_bottom = 600.0
 texture = ExtResource( 1 )
 expand = true
@@ -165,7 +183,7 @@ __meta__ = {
 }
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 4 )
+environment = SubResource( 19 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
 position = Vector2( 515.235, 284.765 )
@@ -179,5 +197,91 @@ speed_scale = 5.13
 explosiveness = 0.75
 randomness = 0.58
 visibility_rect = Rect2( -100, -100, 15, 15 )
-process_material = SubResource( 5 )
+process_material = SubResource( 20 )
 texture = ExtResource( 2 )
+
+[node name="lbl_my_name" type="Label" parent="."]
+margin_left = 11.4735
+margin_top = 563.159
+margin_right = 111.474
+margin_bottom = 591.159
+custom_fonts/font = SubResource( 15 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+text = "Name: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_other_name" type="Label" parent="."]
+margin_left = 11.4735
+margin_top = 529.158
+margin_right = 111.474
+margin_bottom = 557.158
+custom_fonts/font = SubResource( 15 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+text = "Other:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="score" type="Label" parent="."]
+margin_left = 807.477
+margin_top = 7.15639
+margin_right = 1007.48
+margin_bottom = 35.1564
+custom_fonts/font = SubResource( 15 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="my_name" type="Label" parent="."]
+margin_left = 123.474
+margin_top = 561.159
+margin_right = 523.474
+margin_bottom = 589.159
+custom_fonts/font = SubResource( 15 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="other_name" type="Label" parent="."]
+margin_left = 123.474
+margin_top = 529.158
+margin_right = 523.474
+margin_bottom = 557.158
+custom_fonts/font = SubResource( 15 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_scale = 0.0
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+margin_left = 25.5269
+margin_top = 7.59869
+margin_right = 425.527
+margin_bottom = 27.5987
+custom_styles/fg = SubResource( 2 )
+custom_styles/bg = SubResource( 3 )
+step = 1.0
+value = 100.0
+rounded = true
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -7,6 +7,7 @@
 script/source = "extends Area2D
 
 
+enum BulletType{Diamond, Drop, Oval, U, V}
 
 const SPEED = 400 # speed of the ship
 const BULLETS_PER_SECOND = 5 # bullets fired per second
@@ -14,6 +15,7 @@ const DAMAGE_PER_LEVEL = 50 # damage increase after levelup
 const EXPERIENCE_PER_LEVEL = 100 # xp needed for level up
 const LOSS_AFTER_ENEMY_HIT = 34 # damage that is taken after enemy is going out on the left
 const BULLET_SPEED = 500 # bullet speed of the player
+var ship_slave_offset_x = 120 # offset zum master wenn ich slave bin
 var max_health = null
 
 var level = 1
@@ -34,6 +36,8 @@ func _ready():
 	if(is_network_master()):
 		rpc(\"set_position\",position)
 	is_master = is_network_master()
+	if is_network_master():
+		$CanvasLayer/HealthBar.visible = false
 
 func setup(_nr, _position, _health):
 	max_health = _health
@@ -96,7 +100,7 @@ func shoot():
 	
 puppetsync func spawn_bullet():
 	var bullet =  BULLET.instance()
-	bullet.setup(self,level * DAMAGE_PER_LEVEL,Vector2(position.x+20,position.y), BULLET_SPEED)
+	bullet.setup(self,level * DAMAGE_PER_LEVEL,Vector2(position.x+20,position.y), BULLET_SPEED, BulletType.Diamond)
 	$\"../\".add_child(bullet)
 	
 func process_movement(delta):
@@ -112,7 +116,7 @@ func process_movement(delta):
 	if((movement.x != 0 or movement.y != 0) and in_game(position + movement * delta)):
 		addPosition(movement*delta)
 		if docked and Config.is_server:
-			get_parent().move_second((movement*delta))
+			get_parent().move_second(position+movement*delta)
 
 func gainXP(amount):
 	experience += amount
@@ -127,7 +131,10 @@ func in_game(position):
 	return position.x < ProjectSettings.get_setting(\"display/window/size/width\") and position.y < ProjectSettings.get_setting(\"display/window/size/height\") and position.x > 0 and position.y > 0
 	
 func update_progress_bar(percent):
-	$CanvasLayer/HealthBar.value = percent
+	if is_network_master():
+		get_parent().update_health_bar(percent)
+	else:
+		$CanvasLayer/HealthBar.value = percent
 
 func _on_enemy_body_enter(body):
 	# print(\"Player collided with\",body.get_name())
@@ -174,9 +181,12 @@ func set_advertising(is_advertising):
 		$AnimationPlayer.get_animation(\"dock\").set_loop(false)
 		
 func take_control():
-	print(\"Trying to take control as \", player_nr, \" Other player is: \", Config.other_player_id)
+	# print(\"Trying to take control as \", player_nr, \" Other player is: \", Config.other_player_id)
 	get_parent().docking()
 
+func slave_position(p_position):
+	position = Vector2(p_position.x +ship_slave_offset_x, p_position.y)
+	$CanvasLayer.offset = Vector2(p_position.x +ship_slave_offset_x, p_position.y)
 "
 
 [sub_resource type="StyleBoxFlat" id=2]
@@ -213,11 +223,8 @@ func _ready():
 		connect(\"body_entered\", self, \"_on_enemy_body_enter\")
 	
 func _on_enemy_body_enter(body):
-	print(\"Dock collided with \",body.get_name())
 	if(get_parent().advertising):
-		print(\"i am advertising\")
 		if(body.get_parent().advertising):
-			print(\"he is advertising\")
 			get_parent().take_control()
 "
 
