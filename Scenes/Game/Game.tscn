@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://assets/bg/parallax/background_l2.png" type="Texture" id=1]
 [ext_resource path="res://assets/enemies/virus_state_2.png" type="Texture" id=2]
@@ -238,12 +238,7 @@ tracks/0/keys = {
 "values": [ Vector2( 10.0001, 48.0002 ), Vector2( 10, 54 ), Vector2( 10, 48 ) ]
 }
 
-[sub_resource type="DynamicFont" id=9]
-size = 62
-use_filter = true
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=25]
+[sub_resource type="DynamicFont" id=13]
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
@@ -415,11 +410,10 @@ __meta__ = {
 }
 
 [node name="UltimateBar" type="ProgressBar" parent="."]
-margin_left = 10.0
-margin_top = 48.0
+margin_left = 10.0001
+margin_top = 48.0001
 margin_right = 1010.0
-margin_bottom = 67.9675
-step = 0.01
+margin_bottom = 67.9674
 rounded = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -427,7 +421,7 @@ __meta__ = {
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "zittern"
-anims/zittern = SubResource( 24 )
+anims/zittern = SubResource( 12 )
 
 [node name="lbl_game_over" type="Label" parent="."]
 visible = false
@@ -461,7 +455,7 @@ margin_left = 287.475
 margin_top = 333.158
 margin_right = 653.475
 margin_bottom = 361.158
-custom_fonts/font = SubResource( 25 )
+custom_fonts/font = SubResource( 13 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
@@ -476,7 +470,7 @@ margin_left = 447.475
 margin_top = 447.158
 margin_right = 647.475
 margin_bottom = 475.158
-custom_fonts/font = SubResource( 25 )
+custom_fonts/font = SubResource( 13 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
