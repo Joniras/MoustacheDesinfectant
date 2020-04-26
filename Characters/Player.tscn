@@ -192,7 +192,7 @@ func slave_position(p_position):
 "
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.00392157, 0.552941, 0.141176, 1 )
+bg_color = Color( 0.180392, 0.717647, 0.313726, 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.239216, 0.239216, 0.239216, 1 )

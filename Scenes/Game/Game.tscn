@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://assets/bg/parallax/background_l2.png" type="Texture" id=1]
 [ext_resource path="res://assets/enemies/virus_state_2.png" type="Texture" id=2]
@@ -14,9 +14,12 @@ script/source = "extends Node2D
 const ENEMY_SPAWN_PER_SECOND = 1
 const ENEMY_HEALTH = 150
 const ENEMY_XP = 10
+const TIME_FOR_ULT = 50
 
 var time_mult = 1.0
 var time = 0
+var docked = false
+var ult_time = 0
 
 onready var ENEMY = preload(\"res://Characters/Enemy/Enemy.tscn\")
 
@@ -32,22 +35,42 @@ func _ready():
 		_timer.connect(\"timeout\", self, \"_on_Timer_timeout\")
 		_timer.set_wait_time(1/float(ENEMY_SPAWN_PER_SECOND))
 		_timer.set_one_shot(false) 
-		_timer.start()
+		# _timer.start()
 	spawn_player(Config.other_player_id)
 	spawn_player(get_tree().get_network_unique_id())
-	$my_name.text = Config.my_info.name
 	$other_name.text = Config.player_info[Config.other_player_id].name
+	$UltimateBar.visible = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	time += _delta * time_mult
-	$score.text = str(float(round(time*10))/10)
+	$score.text = \"%.1f\" % (float(round(time*10))/10)
+	if(docked):
+		ult_time+= _delta
+		$UltimateBar.value =  (ult_time/float(TIME_FOR_ULT))*100
+		if(ult_time >= TIME_FOR_ULT):
+			do_ultimate()
 	
+	
+func do_ultimate():
+	print(\"Doing ultimate\")
+	$UltimateBar.visible = false
+	$Particles2D.emitting = true
+	ult_time = 0
+	for member in get_tree().get_nodes_in_group(\"enemy\"):
+		self.remove_child(member)
+	rpc(\"undock\")
+
 func docking():
 	rpc(\"set_docked\")
 
+sync func undock():
+	for member in get_tree().get_nodes_in_group(\"player\"):
+		member.docked = false
+
 sync func set_docked():
 	var position_y = null
+	start_ultimate_bar()
 	for member in get_tree().get_nodes_in_group(\"player\"):
 		member.docked = true
 		member.set_advertising(false)
@@ -55,6 +78,10 @@ sync func set_docked():
 			position_y = member.position.y
 		else:
 			member.position.y = position_y
+
+func start_ultimate_bar():
+	$UltimateBar.visible = true
+	docked = true
 
 func move_second(position):
 	rpc_unreliable(\"_move_second\", Config.other_player_id, position)
@@ -159,10 +186,27 @@ use_filter = true
 font_data = ExtResource( 3 )
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.00392157, 0.552941, 0.141176, 1 )
+bg_color = Color( 0.180392, 0.717647, 0.313726, 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.239216, 0.239216, 0.239216, 1 )
+
+[sub_resource type="Animation" id=24]
+resource_name = "zittern"
+length = 0.3
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("UltimateBar:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 10.0001, 48.0002 ), Vector2( 10, 54 ), Vector2( 10, 48 ) ]
+}
 
 [node name="Game" type="Node2D"]
 script = SubResource( 16 )
@@ -271,25 +315,11 @@ visibility_rect = Rect2( -100, -100, 15, 15 )
 process_material = SubResource( 20 )
 texture = ExtResource( 2 )
 
-[node name="lbl_my_name" type="Label" parent="."]
-margin_left = 11.4735
-margin_top = 563.159
-margin_right = 111.474
-margin_bottom = 591.159
-custom_fonts/font = SubResource( 15 )
-custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
-custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
-text = "Name: "
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="lbl_other_name" type="Label" parent="."]
-margin_left = 11.4735
-margin_top = 529.158
-margin_right = 111.474
-margin_bottom = 557.158
+margin_left = 10.0
+margin_top = 557.158
+margin_right = 110.0
+margin_bottom = 585.158
 custom_fonts/font = SubResource( 15 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
@@ -313,24 +343,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="my_name" type="Label" parent="."]
-margin_left = 123.474
-margin_top = 561.159
-margin_right = 523.474
-margin_bottom = 589.159
-custom_fonts/font = SubResource( 15 )
-custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
-custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="other_name" type="Label" parent="."]
-margin_left = 123.474
-margin_top = 529.158
-margin_right = 523.474
-margin_bottom = 557.158
+margin_left = 121.474
+margin_top = 557.158
+margin_right = 521.474
+margin_bottom = 585.158
 custom_fonts/font = SubResource( 15 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
@@ -343,10 +360,10 @@ __meta__ = {
 follow_viewport_scale = 0.0
 
 [node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
-margin_left = 25.5269
-margin_top = 7.59869
-margin_right = 425.527
-margin_bottom = 27.5987
+margin_left = 10.0
+margin_top = 7.15639
+margin_right = 410.0
+margin_bottom = 27.1564
 custom_styles/fg = SubResource( 2 )
 custom_styles/bg = SubResource( 3 )
 step = 1.0
@@ -356,3 +373,18 @@ percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="UltimateBar" type="ProgressBar" parent="."]
+margin_left = 10.0
+margin_top = 52.9122
+margin_right = 1010.0
+margin_bottom = 72.9465
+step = 0.01
+rounded = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "zittern"
+anims/zittern = SubResource( 24 )
