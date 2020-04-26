@@ -141,7 +141,7 @@ sync func _move_second(other_player, position):
 func _on_Timer_timeout():
 	updateEnemyTimer()
 	rng.randomize()
-	var e_position_y = rng.randf_range(50, get_viewport().size.y-50)
+	var e_position_y = rng.randf_range(50, ProjectSettings.get_setting(\"display/window/size/height\")-50)
 	var asset_number = int(rng.randf_range(4, 8))
 	var level = asset_number-4
 	var e_health = (float(ENEMY_BASE_HEALTH)+(level*ENEMY_HEALTH_LEVEL))+(time*float(ENEMY_HEALTH_SCALE_PER_SECOND))
@@ -179,31 +179,31 @@ func remove_me(child, is_me):
 		rpc(\"game_over\")
 "
 
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=2]
 size = 81
 use_filter = true
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=14]
+[sub_resource type="DynamicFont" id=3]
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 60, 1 )
 
-[sub_resource type="GDScript" id=3]
-script/source = "extends ParallaxLayer
-
-"
-
-[sub_resource type="GDScript" id=4]
-script/source = "extends ParallaxLayer
-
-
-"
-
 [sub_resource type="GDScript" id=5]
+script/source = "extends ParallaxLayer
+
+"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends ParallaxLayer
+
+
+"
+
+[sub_resource type="GDScript" id=7]
 script/source = "extends ParallaxLayer
 
 
@@ -219,7 +219,7 @@ func _process(delta):
 	set_motion_offset(Vector2(offset,0))
 "
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=8]
 script/source = "extends ParallaxLayer
 
 
@@ -235,7 +235,7 @@ func _process(delta):
 	set_motion_offset(Vector2(offset,0))
 "
 
-[sub_resource type="Environment" id=7]
+[sub_resource type="Environment" id=9]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.2
@@ -244,7 +244,7 @@ glow_hdr_threshold = 0.05
 glow_hdr_luminance_cap = 10.0
 glow_bicubic_upscale = true
 
-[sub_resource type="ParticlesMaterial" id=8]
+[sub_resource type="ParticlesMaterial" id=10]
 flag_disable_z = true
 direction = Vector3( 0, 0, 0 )
 spread = 180.0
@@ -256,19 +256,18 @@ orbit_velocity_random = 0.0
 angle = 297.9
 angle_random = 0.1
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=11]
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
 
-[sub_resource type="StyleBoxFlat" id=10]
+[sub_resource type="StyleBoxFlat" id=12]
 bg_color = Color( 0.180392, 0.717647, 0.313726, 1 )
 
-[sub_resource type="StyleBoxFlat" id=11]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.239216, 0.239216, 0.239216, 1 )
 
-[sub_resource type="Animation" id=12]
-resource_name = "zittern"
+[sub_resource type="Animation" id=14]
 length = 0.3
 loop = true
 tracks/0/type = "value"
@@ -293,7 +292,7 @@ margin_left = 230.515
 margin_top = 189.324
 margin_right = 795.515
 margin_bottom = 280.324
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 text = "Game Over"
 __meta__ = {
@@ -306,7 +305,7 @@ margin_left = 226.515
 margin_top = 185.324
 margin_right = 789.515
 margin_bottom = 276.324
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
 text = "Game Over"
 __meta__ = {
@@ -319,7 +318,7 @@ margin_left = 333.962
 margin_top = 309.078
 margin_right = 699.962
 margin_bottom = 337.078
-custom_fonts/font = SubResource( 14 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
@@ -336,31 +335,31 @@ collision_mask = 4
 [node name="bottom" type="CollisionShape2D" parent="Border"]
 position = Vector2( 500, 600 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 4 )
 
 [node name="top" type="CollisionShape2D" parent="Border"]
 position = Vector2( 492.78, 0 )
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 4 )
 
 [node name="left" type="CollisionShape2D" parent="Border"]
 position = Vector2( 0, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 4 )
 
 [node name="right" type="CollisionShape2D" parent="Border"]
 position = Vector2( 1024, 250 )
 rotation = 1.5708
 scale = Vector2( 10, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 4 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_ignore_camera_zoom = true
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2( 1024, 0 )
-script = SubResource( 3 )
+script = SubResource( 5 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
 margin_right = 1024.0
@@ -374,7 +373,7 @@ __meta__ = {
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2( 1024, 0 )
-script = SubResource( 4 )
+script = SubResource( 6 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer2"]
 margin_right = 1024.0
@@ -388,7 +387,7 @@ __meta__ = {
 
 [node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2( 1024, 0 )
-script = SubResource( 5 )
+script = SubResource( 7 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer3"]
 margin_right = 1024.0
@@ -402,7 +401,7 @@ __meta__ = {
 
 [node name="ParallaxLayer4" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2( 1024, 0 )
-script = SubResource( 6 )
+script = SubResource( 8 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer4"]
 margin_right = 1024.0
@@ -415,7 +414,7 @@ __meta__ = {
 }
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 7 )
+environment = SubResource( 9 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
 position = Vector2( 515.235, 284.765 )
@@ -429,7 +428,7 @@ speed_scale = 5.13
 explosiveness = 0.75
 randomness = 0.58
 visibility_rect = Rect2( -100, -100, 15, 15 )
-process_material = SubResource( 8 )
+process_material = SubResource( 10 )
 texture = ExtResource( 2 )
 
 [node name="lbl_other_name" type="Label" parent="."]
@@ -437,7 +436,7 @@ margin_left = 10.0
 margin_top = 557.158
 margin_right = 110.0
 margin_bottom = 585.158
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
@@ -451,7 +450,7 @@ margin_left = 430.0
 margin_top = 5.0
 margin_right = 819.0
 margin_bottom = 33.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
@@ -464,7 +463,7 @@ margin_left = 807.477
 margin_top = 7.15639
 margin_right = 1007.48
 margin_bottom = 35.1564
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
@@ -478,7 +477,7 @@ margin_left = 121.474
 margin_top = 557.158
 margin_right = 521.474
 margin_bottom = 585.158
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
@@ -494,8 +493,8 @@ margin_left = 10.0
 margin_top = 7.15639
 margin_right = 410.0
 margin_bottom = 27.1564
-custom_styles/fg = SubResource( 10 )
-custom_styles/bg = SubResource( 11 )
+custom_styles/fg = SubResource( 12 )
+custom_styles/bg = SubResource( 13 )
 step = 1.0
 value = 100.0
 rounded = true
@@ -516,7 +515,7 @@ __meta__ = {
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "zittern"
-anims/zittern = SubResource( 12 )
+anims/zittern = SubResource( 14 )
 
 [node name="lbl_died" type="Label" parent="."]
 visible = false
@@ -524,7 +523,7 @@ margin_left = 431.271
 margin_top = 429.468
 margin_right = 566.271
 margin_bottom = 457.468
-custom_fonts/font = SubResource( 14 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )

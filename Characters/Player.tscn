@@ -14,13 +14,13 @@ enum BulletType{Diamond, Drop, Oval, U, V}
 const SPEED = 400 # speed of the ship
 const BULLETS_PER_SECOND = 5 # bullets fired per second
 const BASE_DAMAGE = 50
-const DAMAGE_PER_LEVEL = 15 # damage increase after levelup
+const DAMAGE_PER_LEVEL = 5 # damage increase after levelup
 const EXPERIENCE_PER_LEVEL = 100 # xp needed for level up
 const LOSS_AFTER_ENEMY_HIT = 34 # damage that is taken after enemy is going out on the left
 const BULLET_SPEED = 500 # bullet speed of the player
-const BULLET_DAMAGE_DOCKED = 2
-const BULLET_SPEED_DOCKED = 2
-const BULLET_SHOOT_SPEED_DOCKED = 2
+const BULLET_DAMAGE_DOCKED = 1 # bullet damage multiplier when docked
+const BULLET_SPEED_DOCKED = 2 # bullet speed multiplier when docked
+const BULLET_SHOOT_SPEED_DOCKED = 1.5 # bullet speed when docked
 
 
 var ship_slave_offset_x = 120 # offset zum master wenn ich slave bin
