@@ -21,6 +21,8 @@ func _ready():
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
 	$HTTPRequest.connect("request_completed", self, "_on_request_completed")
 	$HTTPRequest.request("https://api.ipify.org/")
+	
+	Config.my_info.ship = 1
 	# close networking
 #	get_tree().set_network_peer(null)
 

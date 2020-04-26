@@ -99,7 +99,13 @@ func _on_Timer_timeout():
 	
 func spawn_player(_id):
 	var player =  PLAYER.instance()
-	player.setup(_id,Vector2(100,300),Config.PLAYER_HEALTH)
+	var ship_pack = 1
+	if (Config.is_server):
+		ship_pack = Config.my_info.ship
+	else:
+		ship_pack = Config.player_info[1].ship
+	
+	player.setup(_id,Vector2(100,300),Config.PLAYER_HEALTH,ship_pack)
 	player.set_network_master(_id)
 	player.name = str(_id)
 	# player.done_setup()
