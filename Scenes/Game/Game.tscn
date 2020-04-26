@@ -179,6 +179,16 @@ func remove_me(child, is_me):
 		rpc(\"game_over\")
 "
 
+[sub_resource type="DynamicFont" id=13]
+size = 81
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=14]
+size = 24
+use_filter = true
+font_data = ExtResource( 3 )
+
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 60, 1 )
 
@@ -274,18 +284,49 @@ tracks/0/keys = {
 "values": [ Vector2( 10.0001, 48.0002 ), Vector2( 10, 54 ), Vector2( 10, 48 ) ]
 }
 
-[sub_resource type="DynamicFont" id=13]
-size = 81
-use_filter = true
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=14]
-size = 24
-use_filter = true
-font_data = ExtResource( 3 )
-
 [node name="Game" type="Node2D"]
 script = SubResource( 1 )
+
+[node name="lbl_game_over2" type="Label" parent="."]
+visible = false
+margin_left = 230.515
+margin_top = 189.324
+margin_right = 795.515
+margin_bottom = 280.324
+custom_fonts/font = SubResource( 13 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+text = "Game Over"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_game_over" type="Label" parent="."]
+visible = false
+margin_left = 226.515
+margin_top = 185.324
+margin_right = 789.515
+margin_bottom = 276.324
+custom_fonts/font = SubResource( 13 )
+custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
+text = "Game Over"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_press_sth" type="Label" parent="."]
+visible = false
+margin_left = 333.962
+margin_top = 309.078
+margin_right = 699.962
+margin_bottom = 337.078
+custom_fonts/font = SubResource( 14 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+text = "press [dock] to restart"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Border" type="StaticBody2D" parent="."]
 visible = false
@@ -476,47 +517,6 @@ __meta__ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "zittern"
 anims/zittern = SubResource( 12 )
-
-[node name="lbl_game_over2" type="Label" parent="."]
-visible = false
-margin_left = 230.515
-margin_top = 189.324
-margin_right = 795.515
-margin_bottom = 280.324
-custom_fonts/font = SubResource( 13 )
-custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
-text = "Game Over"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="lbl_game_over" type="Label" parent="."]
-visible = false
-margin_left = 226.515
-margin_top = 185.324
-margin_right = 789.515
-margin_bottom = 276.324
-custom_fonts/font = SubResource( 13 )
-custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
-text = "Game Over"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="lbl_press_sth" type="Label" parent="."]
-visible = false
-margin_left = 333.962
-margin_top = 309.078
-margin_right = 699.962
-margin_bottom = 337.078
-custom_fonts/font = SubResource( 14 )
-custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
-custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
-text = "press [dock] to restart"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="lbl_died" type="Label" parent="."]
 visible = false
