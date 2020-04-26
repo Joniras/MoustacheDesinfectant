@@ -13,6 +13,7 @@ enum BulletType{Diamond, Drop, Oval, U, V}
 
 const SPEED = 400 # speed of the ship
 const BULLETS_PER_SECOND = 5 # bullets fired per second
+const BASE_DAMAGE = 50
 const DAMAGE_PER_LEVEL = 15 # damage increase after levelup
 const EXPERIENCE_PER_LEVEL = 100 # xp needed for level up
 const LOSS_AFTER_ENEMY_HIT = 34 # damage that is taken after enemy is going out on the left
@@ -140,7 +141,7 @@ func shoot():
 puppetsync func spawn_bullet():
 	var bullet =  BULLET.instance()
 	var bullet_speed = BULLET_SPEED
-	var bullet_damage = level * DAMAGE_PER_LEVEL
+	var bullet_damage = BASE_DAMAGE + ((level-1) * DAMAGE_PER_LEVEL)
 	if(docked):
 		bullet_speed *= BULLET_SPEED_DOCKED
 		bullet_damage *= BULLET_DAMAGE_DOCKED
