@@ -11,10 +11,10 @@
 script/source = "extends Node2D
 
 
-const ENEMY_SPAWN_PER_SECOND = 1
+const ENEMY_SPAWN_PER_SECOND = 0.2
 const ENEMY_HEALTH = 150
 const ENEMY_XP = 10
-const TIME_FOR_ULT = 50
+const TIME_FOR_ULT = 10
 
 var time_mult = 1.0
 var time = 0
@@ -59,19 +59,24 @@ func _process(_delta):
 	
 	
 func do_ultimate():
+	if(Config.is_server):
+		rpc(\"ultimate\")
+
+sync func ultimate():
 	Sound.get_node(\"AudioStreamPlayerExplosion\").play()
-	print(\"Doing ultimate\")
-	$UltimateBar.visible = false
+	# print(\"Doing ultimate\")
 	$Particles2D.emitting = true
 	ult_time = 0
 	for member in get_tree().get_nodes_in_group(\"enemy\"):
 		self.remove_child(member)
 	rpc(\"undock\")
-
+	
 func docking():
 	rpc(\"set_docked\")
 
 sync func undock():
+	docked = false
+	$UltimateBar.visible = false
 	for member in get_tree().get_nodes_in_group(\"player\"):
 		member.docked = false
 
@@ -411,9 +416,9 @@ __meta__ = {
 
 [node name="UltimateBar" type="ProgressBar" parent="."]
 margin_left = 10.0001
-margin_top = 48.0001
+margin_top = 48.0002
 margin_right = 1010.0
-margin_bottom = 67.9674
+margin_bottom = 67.9675
 rounded = true
 __meta__ = {
 "_edit_use_anchors_": false
