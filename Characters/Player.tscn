@@ -20,7 +20,7 @@ const LOSS_AFTER_ENEMY_HIT = 34 # damage that is taken after enemy is going out 
 const BULLET_SPEED = 500 # bullet speed of the player
 const BULLET_DAMAGE_DOCKED = 1 # bullet damage multiplier when docked
 const BULLET_SPEED_DOCKED = 2 # bullet speed multiplier when docked
-const BULLET_SHOOT_SPEED_DOCKED = 3 # bullet speed when docked
+const BULLET_SHOOT_SPEED_DOCKED = 3 # bullet speed mutliplier when docked
 
 
 var ship_slave_offset_x = 120 # offset zum master wenn ich slave bin
