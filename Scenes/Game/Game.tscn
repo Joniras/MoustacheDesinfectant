@@ -141,7 +141,7 @@ sync func _move_second(other_player, position):
 func _on_Timer_timeout():
 	updateEnemyTimer()
 	rng.randomize()
-	var e_position_y = rng.randf_range(50, ProjectSettings.get_setting(\"display/window/size/height\")-50)
+	var e_position_y = rng.randf_range(50, get_viewport().size.y-50)
 	var asset_number = int(rng.randf_range(4, 8))
 	var level = asset_number-4
 	var e_health = (float(ENEMY_BASE_HEALTH)+(level*ENEMY_HEALTH_LEVEL))+(time*float(ENEMY_HEALTH_SCALE_PER_SECOND))
@@ -178,16 +178,6 @@ func remove_me(child, is_me):
 	if docked or get_tree().get_nodes_in_group(\"player\").size() <= 0:
 		rpc(\"game_over\")
 "
-
-[sub_resource type="DynamicFont" id=2]
-size = 81
-use_filter = true
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=3]
-size = 24
-use_filter = true
-font_data = ExtResource( 3 )
 
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 60, 1 )
@@ -295,47 +285,6 @@ font_data = ExtResource( 3 )
 
 [node name="Game" type="Node2D"]
 script = SubResource( 1 )
-
-[node name="lbl_game_over2" type="Label" parent="."]
-visible = false
-margin_left = 230.515
-margin_top = 189.324
-margin_right = 795.515
-margin_bottom = 280.324
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
-text = "Game Over"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="lbl_game_over" type="Label" parent="."]
-visible = false
-margin_left = 226.515
-margin_top = 185.324
-margin_right = 789.515
-margin_bottom = 276.324
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 1, 0.356863, 0.823529, 1 )
-text = "Game Over"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="lbl_press_sth" type="Label" parent="."]
-visible = false
-margin_left = 333.962
-margin_top = 309.078
-margin_right = 699.962
-margin_bottom = 337.078
-custom_fonts/font = SubResource( 3 )
-custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
-custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
-text = "press [dock] to restart"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Border" type="StaticBody2D" parent="."]
 visible = false
@@ -543,6 +492,7 @@ __meta__ = {
 }
 
 [node name="lbl_game_over2" type="Label" parent="."]
+visible = false
 margin_left = 238.515
 margin_top = 189.324
 margin_right = 803.515
@@ -555,6 +505,7 @@ __meta__ = {
 }
 
 [node name="lbl_game_over" type="Label" parent="."]
+visible = false
 margin_left = 234.515
 margin_top = 185.324
 margin_right = 797.515
@@ -567,6 +518,7 @@ __meta__ = {
 }
 
 [node name="lbl_press_sth" type="Label" parent="."]
+visible = false
 margin_left = 333.962
 margin_top = 309.078
 margin_right = 699.962
