@@ -27,8 +27,10 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _process(delta):
+	if Input.is_action_just_pressed("Left_Mouse"):
+		Sound.get_node("AudioStreamPlayerClick").play()
+	pass
 
 func _connect():
 	Config.is_server = get_node("cb_host").pressed
@@ -126,10 +128,8 @@ func _show_controls(is_host):
 	get_node("lbl_ip").visible = !is_host
 	get_node("lbl_port").visible = !is_host
 	get_node("lbl_select_space_ship").visible = is_host
-	get_node("space_ship_pack_1_1").visible = is_host
-	get_node("space_ship_pack_1_2").visible = is_host
-	get_node("space_ship_pack_2_1").visible = is_host
-	get_node("space_ship_pack_2_2").visible = is_host
+	get_node("space_ship_1").visible = is_host
+	get_node("space_ship_2").visible = is_host
 	get_node("cb_ship_pack_1").visible = is_host
 	get_node("cb_ship_pack_2").visible = is_host
 
