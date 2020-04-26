@@ -393,7 +393,7 @@ position = Vector2( 0, -4.37588 )
 rotation = 1.5708
 
 [node name="space_ship_pack_2_1" type="Sprite" parent="space_ship_2"]
-position = Vector2( 492.27, -449.217 )
+position = Vector2( 492.27, -450.461 )
 scale = Vector2( 0.158663, 0.127489 )
 texture = ExtResource( 9 )
 
