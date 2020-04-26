@@ -165,6 +165,12 @@ func process_movement(delta):
 			get_parent().move_second(position+movement*delta)
 
 func gainXP(amount):
+	if(docked):
+		get_parent().gainXP(amount)
+	else:
+		addXP(amount)
+
+func addXP(amount):
 	experience += amount
 	if(experience>EXPERIENCE_PER_LEVEL):
 		level+=1
