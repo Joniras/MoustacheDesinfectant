@@ -40,6 +40,7 @@ func _ready():
 		_enemyTimer.start()
 	spawn_player(Config.other_player_id)
 	spawn_player(get_tree().get_network_unique_id())
+	$lbl_my_name.text = Config.my_info.name
 	$other_name.text = Config.player_info[Config.other_player_id].name
 	$UltimateBar.visible = false
 
@@ -364,6 +365,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="lbl_my_name" type="Label" parent="."]
+margin_left = 430.0
+margin_top = 5.0
+margin_right = 819.0
+margin_bottom = 33.0
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.356863, 0.823529, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="score" type="Label" parent="."]
 margin_left = 807.477
 margin_top = 7.15639
@@ -411,9 +425,9 @@ __meta__ = {
 
 [node name="UltimateBar" type="ProgressBar" parent="."]
 margin_left = 10.0001
-margin_top = 48.0001
+margin_top = 48.0002
 margin_right = 1010.0
-margin_bottom = 67.9674
+margin_bottom = 67.9678
 rounded = true
 __meta__ = {
 "_edit_use_anchors_": false
