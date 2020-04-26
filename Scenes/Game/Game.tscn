@@ -144,7 +144,7 @@ sync func _move_second(other_player, position):
 func _on_Timer_timeout():
 	updateEnemyTimer()
 	rng.randomize()
-	var e_position_y = rng.randf_range(50, get_viewport().size.y-50)
+	var e_position_y = rng.randf_range(50, ProjectSettings.get_setting(\"display/window/size/height\")-50)
 	var asset_number = int(rng.randf_range(4, 8))
 	var level = asset_number-4
 	var e_health = (float(ENEMY_BASE_HEALTH)+(level*ENEMY_HEALTH_LEVEL))+(time*float(ENEMY_HEALTH_SCALE_PER_SECOND))
