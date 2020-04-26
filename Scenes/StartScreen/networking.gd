@@ -152,3 +152,7 @@ func _on_lbl_ip_and_port_gui_input(event):
 func on_click():
 	print("is_click")
 	OS.set_clipboard(my_ip)
+
+
+func _on_btn_help_pressed():
+	get_tree().change_scene("res://Scenes/StartScreen/Instructions.tscn")

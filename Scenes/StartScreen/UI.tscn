@@ -40,6 +40,7 @@ size = 22
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=8]
+use_filter = true
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=9]
@@ -238,6 +239,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="btn_help" type="Button" parent="."]
+margin_left = 817.515
+margin_top = 553.589
+margin_right = 914.515
+margin_bottom = 578.589
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 0, 0.882353, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 0.356863, 0.823529, 1 )
+custom_colors/font_color_pressed = Color( 1, 0.356863, 0.823529, 1 )
+text = "HELP!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="lbl_title2" type="Label" parent="."]
 margin_left = 45.3572
 margin_top = 56.2135
@@ -411,5 +426,6 @@ anims/UpAndDown = SubResource( 16 )
 [connection signal="pressed" from="cb_client" to="." method="_on_cb_client_pressed"]
 [connection signal="gui_input" from="lbl_ip_and_port" to="." method="_on_lbl_ip_and_port_gui_input"]
 [connection signal="pressed" from="btn_connect" to="." method="_on_btn_connect_pressed"]
+[connection signal="pressed" from="btn_help" to="." method="_on_btn_help_pressed"]
 [connection signal="pressed" from="cb_ship_pack_1" to="." method="_on_cb_ship_pack_1_pressed"]
 [connection signal="pressed" from="cb_ship_pack_2" to="." method="_on_cb_ship_pack_2_pressed"]
